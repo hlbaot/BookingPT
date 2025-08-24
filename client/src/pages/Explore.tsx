@@ -29,7 +29,7 @@ const Explore: React.FC<ExploreProps> = () => {
   }, []);
 
   return (
-    <section className="explore-container">
+    <section className="explore-container" id='explore'>
       <div className="explore">
         <div className="left">
           <div className="text_head">
@@ -46,7 +46,7 @@ const Explore: React.FC<ExploreProps> = () => {
                 </p>
               ))}
             </div>
-            <h4 className="footer">Hãy để BT Studio giúp bạn lưu giữ những khoảnh khắc quý giá nhất!</h4>
+            <h4 className="footer">Hãy để Timer Studio giúp bạn lưu giữ những khoảnh khắc quý giá nhất!</h4>
           </div>
         </div>
 

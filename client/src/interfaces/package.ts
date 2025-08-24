@@ -1,4 +1,3 @@
-// src/interfaces/Item.ts
 export interface Package {
     id: number;
     images: string[];

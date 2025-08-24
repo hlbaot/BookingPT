@@ -4,14 +4,20 @@ import '../styles/Head.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
+import ButtonLogin from './btn_login';
 
 export default function Head() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
+    const [email, setEmail] = useState<string | null>(null);
     const lastScrollY = useRef(0);
     const ticking = useRef(false);
 
-    // AOS: chỉ init JS (CSS đã import ở app/layout.tsx)
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('email');
+    }
+
     useEffect(() => {
         (async () => {
             const AOS = (await import('aos')).default;
@@ -19,7 +25,6 @@ export default function Head() {
         })();
     }, []);
 
-    // Ẩn/hiện header khi cuộn (tối ưu với rAF)
     useEffect(() => {
         const update = () => {
             const y = window.scrollY;
@@ -39,21 +44,29 @@ export default function Head() {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
+    // Scroll đến section
     const scrollToId = useCallback((id: string) => {
         const el = document.getElementById(id);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         setIsMenuOpen(false);
     }, []);
 
+
+    useEffect(() => {
+        const storedEmail = localStorage.getItem("email");
+        setEmail(storedEmail);
+    }, []);
+
     return (
         <motion.header
-            className="head w-full h-auto fixed top-0 left-0 right-0 bg-black bg-opacity-50 flex justify-around items-center bg-none"
+            className="head w-full h-auto fixed top-0 left-0 right-0 bg-black bg-opacity-50 flex justify-around items-center"
             data-aos="fade-down"
             initial={{ y: 0 }}
             animate={{ y: isVisible ? 0 : '-100%' }}
             transition={{ duration: 0.15 }}
         >
-            <div className='lg:block hidden'>
+            {/* Logo */}
+            <div className="lg:block hidden">
                 <span
                     className="logo text-white text-4xl cursor-pointer"
                     onClick={() => scrollToId('home')}
@@ -62,6 +75,7 @@ export default function Head() {
                 </span>
             </div>
 
+            {/* Navigation */}
             <nav className="nav_bar" aria-label="Main">
                 <button
                     aria-label="Toggle menu"
@@ -74,57 +88,35 @@ export default function Head() {
                 </button>
 
                 <ul className={`nav_list ${isMenuOpen ? 'mobile-open' : ''}`}>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => scrollToId('home')}
-                            className="cursor-pointer px-3 py-2 hover:text-rose-400"
-                        >
-                            Home
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => scrollToId('explore')}
-                            className="cursor-pointer px-3 py-2 hover:text-rose-400"
-                        >
-                            Explore
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => scrollToId('service')}
-                            className="cursor-pointer px-3 py-2 hover:text-rose-400"
-                        >
-                            Service
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => scrollToId('reviews')}
-                            className="cursor-pointer px-3 py-2 hover:text-rose-400"
-                        >
-                            Your Reviews
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            onClick={() => scrollToId('contact')}
-                            className="cursor-pointer px-3 py-2 hover:text-rose-400"
-                        >
-                            Contact
-                        </button>
-                    </li>
+                    <li><button onClick={() => scrollToId('home')} className="px-3 py-2 hover:text-rose-400">Home</button></li>
+                    <li><button onClick={() => scrollToId('explore')} className="px-3 py-2 hover:text-rose-400">Explore</button></li>
+                    <li><button onClick={() => scrollToId('service')} className="px-3 py-2 hover:text-rose-400">Service</button></li>
+                    <li><button onClick={() => scrollToId('reviews')} className="px-3 py-2 hover:text-rose-400">Your Reviews</button></li>
+                    <li><button onClick={() => scrollToId('contact')} className="px-3 py-2 hover:text-rose-400">Contact</button></li>
                 </ul>
-
             </nav>
 
+            {/* Right side buttons */}
             <div className="flex items-center gap-[1rem]">
-                <button onClick={() => scrollToId('service')} className="btn" type="button">
+                {email ? (
+                    <div className="flex items-center gap-2 text-white">
+                        <span>Hi, {email}</span>
+                        <button
+                            onClick={handleLogout}
+                            className="text-sm text-red-400 hover:underline"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                ) : (
+                    <ButtonLogin />
+                )}
+
+                <button
+                    onClick={() => scrollToId('service')}
+                    className="btn"
+                    type="button"
+                >
                     Book Now !
                 </button>
             </div>

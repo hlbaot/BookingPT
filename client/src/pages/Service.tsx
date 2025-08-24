@@ -39,7 +39,7 @@ const Service: React.FC = () => {
   }, []);
 
   return (
-    <section className="w-full h-[100vh]">
+    <section className="w-full h-[100vh]" id='service'>
       <div className="service">
         <div className="text_head w-full h-auto text-center">
           <h1
@@ -101,7 +101,8 @@ const Service: React.FC = () => {
                   <div className="p-5 flex items-center justify-center">
                     <button
                       onClick={() => handleOpen(item)}
-                      className="px-4 py-2 text-sm font-semibold text-black bg-white rounded-full hover:bg-green-500 hover:text-white transform hover:translate-y-0 active:translate-y-1 focus:outline-none"
+                      className="px-4 py-2 text-sm rounded font-semibold text-black bg-white hover:bg-green-500 hover:text-white transform hover:translate-y-0 active:translate-y-1 focus:outline-none"
+
                     >
                       Xem chi tiết
                     </button>

@@ -1,17 +1,16 @@
 .review {
-    width: 100%;
-    display: flex;
-    margin-top: 1rem;
-    background-color: rgb(255, 255, 255);
     .left {
         width: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
 
-        form {
-            width: 100%; 
-            max-width: 500px;
+        form{
+            padding: 20px;
+            h1{
+                font-size: 24px;
+                font-family: 'Dancing Script', cursive;
+            }
         }
 
         .head_form {
@@ -30,6 +29,9 @@
         justify-content: center;
         align-items: center;
         margin-right: 1rem;
+        h1{
+            font-family: 'Dancing Script', cursive;
+        }
     }
 
     //ipad
