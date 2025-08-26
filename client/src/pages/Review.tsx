@@ -2,17 +2,15 @@
 import { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Cookies from "js-cookie"
 import axios from "axios";
 import "../styles/Review.scss";
 
 const Review: React.FC = () => {
   const [rating, setRating] = useState<number>(0);
-  const [email, setEmail] = useState<string | null>(null);
 
-  useEffect(() => {
-    const storedEmail = localStorage.getItem("email");
-    setEmail(storedEmail);
-  }, []);
+  //get email từ cookies
+  const email = Cookies.get("email");
 
   return (
     <section className="w-full h-[auto] flex justify-center items-center" id="review">
@@ -20,11 +18,18 @@ const Review: React.FC = () => {
         {/* Left Side */}
         <div className="left">
           <Formik
-            initialValues={{ email : email || "", message: "" }}
+            initialValues={{ email: email || "", message: "" }}
             validationSchema={Yup.object({
               message: Yup.string().required("Feedback is required"),
             })}
             onSubmit={async (values, { resetForm }) => {
+
+              const token = Cookies.get("token");
+              if (!token) {
+                alert("Vui lòng đăng nhập để gửi feedback!");
+                return;
+              }
+
               try {
                 const response = await axios.post("API_feedback", {
                   ...values,
@@ -55,7 +60,7 @@ const Review: React.FC = () => {
                     type="email"
                     placeholder="Your email..."
                     className="bg-slate-100 text-slate-600 border border-black w-full rounded-lg mb-2 p-2 focus:border-slate-600"
-                    readOnly // không cho sửa email
+                    style={{ pointerEvents: "none" }}
                   />
                 </div>
 

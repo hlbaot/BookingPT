@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import FormSignIn from './signIn';
+import FormSignUp from './signUp';
 
 const ButtonLogin = () => {
-  const [showForm, setShowForm] = useState(false);
-
+  const [mode, setMode] = useState<"signin" | "signup" | null>(null);
   // khóa scroll khi mở modal
   useEffect(() => {
-    if (showForm) {
+    if (mode) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
@@ -17,18 +17,19 @@ const ButtonLogin = () => {
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [showForm]);
+  }, [mode]);
 
   return (
     <StyledWrapper>
-      <button onClick={() => setShowForm(true)}>
+      <button onClick={() => setMode("signin")}>
         <span>Login</span>
       </button>
 
-      {showForm && (
-        <ModalOverlay onClick={() => setShowForm(false)}>
+{mode && (
+        <ModalOverlay onClick={() => setMode(null)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
-            <FormSignIn />
+            {mode === "signin" && <FormSignIn switchToSignUp={() => setMode("signup")} />}
+            {mode === "signup" && <FormSignUp switchToSignIn={() => setMode("signin")} />}
           </ModalContent>
         </ModalOverlay>
       )}

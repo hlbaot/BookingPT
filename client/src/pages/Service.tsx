@@ -6,7 +6,6 @@ import AOS from "aos";
 import { useState, useEffect } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import CustomModal from "../component/modal_booking";
-import { Package } from '@/interfaces/package';
 import { API_Service } from "@/api/API_Service";
 
 const Service: React.FC = () => {

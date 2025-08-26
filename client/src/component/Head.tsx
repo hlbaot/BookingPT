@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 import ButtonLogin from './btn_login';
+import Cookies from "js-cookie";
 
 export default function Head() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,8 +15,8 @@ export default function Head() {
     const ticking = useRef(false);
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('email');
+        Cookies.remove("email");
+        window.location.reload();
     }
 
     useEffect(() => {
@@ -24,7 +25,7 @@ export default function Head() {
             AOS.init({ duration: 1000 });
         })();
     }, []);
-
+    // effect head scroll
     useEffect(() => {
         const update = () => {
             const y = window.scrollY;
@@ -51,7 +52,7 @@ export default function Head() {
         setIsMenuOpen(false);
     }, []);
 
-
+    // Lấy email từ localStorage
     useEffect(() => {
         const storedEmail = localStorage.getItem("email");
         setEmail(storedEmail);
@@ -91,7 +92,7 @@ export default function Head() {
                     <li><button onClick={() => scrollToId('home')} className="px-3 py-2 hover:text-rose-400">Home</button></li>
                     <li><button onClick={() => scrollToId('explore')} className="px-3 py-2 hover:text-rose-400">Explore</button></li>
                     <li><button onClick={() => scrollToId('service')} className="px-3 py-2 hover:text-rose-400">Service</button></li>
-                    <li><button onClick={() => scrollToId('reviews')} className="px-3 py-2 hover:text-rose-400">Your Reviews</button></li>
+                    <li><button onClick={() => scrollToId('review')} className="px-3 py-2 hover:text-rose-400">Your Reviews</button></li>
                     <li><button onClick={() => scrollToId('contact')} className="px-3 py-2 hover:text-rose-400">Contact</button></li>
                 </ul>
             </nav>
@@ -109,7 +110,7 @@ export default function Head() {
                         </button>
                     </div>
                 ) : (
-                    <ButtonLogin />
+                    <ButtonLogin/>
                 )}
 
                 <button

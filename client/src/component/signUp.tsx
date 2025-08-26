@@ -1,11 +1,16 @@
+'use client';
 import React from 'react';
 import styled from 'styled-components';
 
-const Form = () => {
+interface Props {
+    switchToSignIn: () => void;
+}
+
+const FormSignUp : React.FC<Props> = ({ switchToSignIn }) =>{
   return (
     <StyledWrapper>
       <div className="card">
-        <p className="title">Log In!</p>
+        <p className="title">Sign Up!</p>
         <form>
           <div className="field">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className="input-icon">
@@ -20,7 +25,9 @@ const Form = () => {
             <input type="password" name="logpass" className="input-field" placeholder="Password" id="logpass" autoComplete="off" />
           </div>
           <button type="submit" className="btn">Login</button>
-          <p className='text-white'>If you have a account <a href="">Sign In</a></p>
+          <p className='text-white'>If you have a account <a href="#" onClick={(e) => { e.preventDefault(); switchToSignIn(); }} className="text-blue-400">
+            Sign In
+          </a></p>
         </form>
       </div>
     </StyledWrapper>
@@ -109,4 +116,4 @@ const StyledWrapper = styled.div`
     color: #ffeba7;
   }`;
 
-export default Form;
+export default FormSignUp;

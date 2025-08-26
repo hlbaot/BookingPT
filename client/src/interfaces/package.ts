@@ -1,4 +1,4 @@
-export interface Package {
+interface Package {
     id: number;
     images: string[];
     title: string;
