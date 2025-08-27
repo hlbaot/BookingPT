@@ -10,7 +10,6 @@ import Cookies from "js-cookie";
 export default function Head() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
-    const [email, setEmail] = useState<string | null>(null);
     const lastScrollY = useRef(0);
     const ticking = useRef(false);
 
@@ -52,11 +51,7 @@ export default function Head() {
         setIsMenuOpen(false);
     }, []);
 
-    // Lấy email từ localStorage
-    useEffect(() => {
-        const storedEmail = localStorage.getItem("email");
-        setEmail(storedEmail);
-    }, []);
+    const email = Cookies.get("email");
 
     return (
         <motion.header

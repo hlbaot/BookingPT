@@ -22,12 +22,10 @@ const FormSignIn: React.FC<Props> = ({ switchToSignUp }) => {
                 const data = await API_SignIn(values);
 
                 if (data.token) {
+                    Cookies.set("token", data.token, { expires: 7 });
+                    Cookies.set("email", values.email);
                     window.location.reload();
                 }
-                //set token vào Cookies
-                Cookies.set("token", data.token, { expires: 7 });
-                //set email vào Cookies
-                Cookies.set("email", values.email);
 
             } catch (err: any) {
                 const message = err.response?.data?.message || 'Sai email hoặc mật khẩu';
@@ -61,9 +59,7 @@ const FormSignIn: React.FC<Props> = ({ switchToSignUp }) => {
                             {...formik.getFieldProps('email')}
                         />
                     </div>
-                    {formik.touched.email && formik.errors.email && (
-                        <p className="error">{formik.errors.email}</p>
-                    )}
+                    {formik.errors.email && <p className="error text-red-400">{formik.errors.email}</p>}
 
                     {/* Password */}
                     <div className="field">
@@ -78,13 +74,12 @@ const FormSignIn: React.FC<Props> = ({ switchToSignUp }) => {
                             {...formik.getFieldProps('password')}
                         />
                     </div>
-                    {formik.touched.password && formik.errors.password && (
-                        <p className="error">{formik.errors.password}</p>
-                    )}
+                    {formik.errors.password && <p className="error text-red-400">{formik.errors.password}</p>}
+
 
                     {/* Submit */}
                     <button type="submit" className="btn" disabled={formik.isSubmitting}>
-                        {formik.isSubmitting ? 'Logging in...' : 'Login'}
+                        {formik.isSubmitting ? 'Logging in...' : 'Sign in'}
                     </button>
 
                     <p className="text-white text-sm">
@@ -100,7 +95,7 @@ const FormSignIn: React.FC<Props> = ({ switchToSignUp }) => {
 
 const StyledWrapper = styled.div`
   .card {
-    height: 300px;
+    height: auto;
     width: 380px;
     padding: 1.9rem 1.2rem;
     text-align: center;
