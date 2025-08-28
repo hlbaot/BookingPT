@@ -4,5 +4,5 @@ interface FormBooking {
   date: string;
   time: string;
   address: string;
-  note: string;
+  note?: string
 }

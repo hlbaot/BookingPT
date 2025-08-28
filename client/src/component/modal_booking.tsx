@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "../styles/Modal.scss";
+import { API_SubmitBooking } from "@/api/API_SubmitPackage";
 import Cookies from "js-cookie";
 
 interface CustomModalProps {
@@ -36,6 +37,8 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
   //get email từ cookies
   const email = Cookies.get("email");
 
+  //lấy ngày hiện tại
+  const today = new Date().toISOString().split("T")[0]; // yyyy-MM-dd
 
   return (
     <section>
@@ -98,19 +101,12 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                   }
 
                   try {
-                    const response = await axios.post("https://your-api-endpoint.com/submit", 
-                      values, {
-                      headers: { Authorization: `Bearer ${token}` },
-                    });
-
-                    if (response.status === 200) {
-                      alert("Gửi thông tin thành công!");
-                      resetForm();
-                      handleClose();
-                    }
-                  } catch (error) {
+                    const res = await API_SubmitBooking(values, token);
+                    alert("Gửi thông tin thành công!");
+                    resetForm();
+                    handleClose();
+                  } catch {
                     alert("Có lỗi xảy ra, vui lòng thử lại!");
-                    console.error("Error submitting form:", error);
                   }
                 }}
               >
@@ -139,6 +135,7 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                       <Field
                         name="date"
                         type="date"
+                        min={today}
                         className="w-full p-2 border border-gray-300 rounded-md text-black text-sm"
                       />
                       <ErrorMessage name="date" component="div" className="text-red-500 text-xs mt-1" />
@@ -146,10 +143,14 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                     <div className="form-field flex-1 min-w-[150px]">
                       <label className="block text-sm mb-1 text-black">Time</label>
                       <Field
+                        as="select"
                         name="time"
-                        type="time"
                         className="w-full p-2 border border-gray-300 rounded-md text-black text-sm"
-                      />
+                      >
+                        <option value="">-- Chọn khung giờ --</option>
+                        <option value="7-11">07:00 - 11:00</option>
+                        <option value="13-17">13:00 - 17:00</option>
+                      </Field>
                       <ErrorMessage name="time" component="div" className="text-red-500 text-xs mt-1" />
                     </div>
                   </div>

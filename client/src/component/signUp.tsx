@@ -29,7 +29,6 @@ const FormSignUp: React.FC<Props> = ({ switchToSignIn }) => {
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         await API_SendOTP(values.email);
-
         setEmailTemp(values.email);
         setPasswordTemp(values.password);
         setShowOtpInput(true);
