@@ -1,8 +1,10 @@
+'use client';
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import '../assets/styles/managerHome.scss';
-import ButtonAddImg from '../ui/btnAddImg';
+import '@/styles/managerHome.scss';
+import ButtonAddImg from '@/components/btnAddImg';
+import Cookies from 'js-cookie';
 
 const ManagerHome: React.FC = () => {
   const [images, setImages] = useState<{ url: string; public_id: string }[]>([]);
@@ -42,12 +44,12 @@ const ManagerHome: React.FC = () => {
   
     if (result.isConfirmed) {
       try {
-        const token = sessionStorage.getItem('token');
+        const token = Cookies.get('token');
         await axios.delete('http://localhost:3001/delete-image', {
           data: { public_id },
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          // headers: {
+          //   Authorization: `Bearer ${token}`
+          // }
         });
   
         const updatedImages = images.filter(img => img.public_id !== public_id);

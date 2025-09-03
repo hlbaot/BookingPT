@@ -1,7 +1,9 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import '../assets/styles/managerFeedback.scss';
+import '@/styles/managerFeedback.scss';
+import Cookies from 'js-cookie';
 
 interface Feedback {
   email: string;
@@ -14,7 +16,7 @@ const ManagerFeedback: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = sessionStorage.getItem('token');
+      const token = Cookies.get('token');
 
       if (!token) {
         Swal.fire({

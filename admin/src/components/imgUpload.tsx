@@ -1,6 +1,8 @@
+'use client';
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 type Props = {
   index: number;
@@ -25,7 +27,7 @@ function ImageUploadBox({ index, packageId }: Props) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const token = sessionStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) {
       Swal.fire({
         title: "Lỗi",

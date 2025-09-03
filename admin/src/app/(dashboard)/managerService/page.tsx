@@ -1,9 +1,11 @@
+'use client';
 import React, { useState, useEffect } from 'react';
-import '../assets/styles/managerService.scss';
-import ButtonAddService from '../ui/btnAddService';
+import '@/styles/managerService.scss';
+import ButtonAddService from '@/components/btnAddService';
 import Swal from 'sweetalert2';
-import ModalPackage from '../component/modalPackage';
+import ModalPackage from '@/components/modalPackage';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 interface ServicePackage {
   id: number;
@@ -24,7 +26,7 @@ function ManagerService() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<ServicePackage | null>(null);
 
-  const getToken = () => sessionStorage.getItem('token'); // Hàm lấy token từ sessionStorage
+  const token = Cookies.get('token');
 
   //Chỗ mới sửa
   useEffect(() => {
@@ -33,14 +35,14 @@ function ManagerService() {
         //API_GET_PACKAGE
         const response = await axios.get("", {
           headers: {
-            Authorization: `Bearer ${getToken()}`,
+            Authorization:`Bearer ${token}`,
           },
         });
 
         // Chuyển price từ string thành number
         const packages = response.data.packages.map((pkg: ServicePackage) => ({
           ...pkg,
-          price: parseFloat(String(pkg.pricePackage)), // Chuyển price thành số
+          price: parseFloat(String(pkg.pricePackage)), 
         }));
 
         setData(packages); // Cập nhật state data
@@ -70,7 +72,7 @@ function ManagerService() {
           //API_DELETE_SERVICE
           await axios.delete("", {
             headers: {
-              Authorization: `Bearer ${getToken()}`,
+              Authorization: `Bearer ${token}`,
             },
             data: { package_id: id }
           });
@@ -132,7 +134,7 @@ function ManagerService() {
         payload,
         {
           headers: {
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

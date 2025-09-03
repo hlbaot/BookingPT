@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import ImageUploadBox from './imageUpload';
+import ImageUploadBox from './imgUpload';
 
 type ModalPackageProps = {
   open: boolean;

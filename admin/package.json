@@ -3,21 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint"
-  },
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint"
+}
+,
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@fortawesome/fontawesome-svg-core": "^7.0.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@fortawesome/react-fontawesome": "^3.0.1",
+    "@mui/material": "^7.3.1",
+    "aos": "^2.3.4",
     "axios": "^1.11.0",
+    "formik": "^2.4.6",
+    "js-cookie": "^3.0.5",
     "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "sass": "^1.91.0"
+    "sass": "^1.91.0",
+    "swal": "^0.1.0",
+    "sweetalert2": "^11.22.5",
+    "yup": "^1.7.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

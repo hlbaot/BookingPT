@@ -1,5 +1,5 @@
 interface FormFeedback {
-  email: string;
-  rating: number; 
-  comments?: string;
+  // email: string;
+  ratingIndex: number; 
+  content?: string;
 }

@@ -1,9 +1,9 @@
 import axios from "axios";
-//  gửi lịch đặt
-export async function API_SubmitFeedBack(values: FormBooking, token: string) {
+//  gửi feedback
+export async function API_SubmitFeedBack(values: FormFeedback, token: string) {
   try {
     const response = await axios.post<FormBooking>(
-      "https://your-api-endpoint.com/formBooking",
+      "http://192.168.192.189:8080/ratings",
       values,
       { headers: { Authorization: `Bearer ${token}` } }
     );

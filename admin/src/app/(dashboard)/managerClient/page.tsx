@@ -1,7 +1,9 @@
+'use client';
 import React, { useState, useEffect } from 'react';
-import '../assets/styles/managerClient.scss';
+import '@/styles/managerClient.scss';
 import Swal from "sweetalert2";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 interface ServicePackage {
   id: number;
@@ -34,7 +36,7 @@ const ManagerClient: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = sessionStorage.getItem('token');
+        const token = Cookies.get('token');
         if (!token) {
           Swal.fire({
             title: 'Lỗi!',
