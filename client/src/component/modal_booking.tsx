@@ -18,14 +18,14 @@ interface CustomModalProps {
 export default function CustomModal({ open, handleClose, serviceData }: CustomModalProps) {
   if (!serviceData) return null;
 
-  const { title, description, price, images } = serviceData;
+  // const { title, description, price, images } = serviceData;
   const [selectedImage, setSelectedImage] = useState<string>("");
 
-  useEffect(() => {
-    if (serviceData) {
-      setSelectedImage(serviceData.images[0]);
-    }
-  }, [serviceData]);
+  // useEffect(() => {
+  //   if (serviceData) {
+  //     setSelectedImage(serviceData.images[0]);
+  //   }
+  // }, [serviceData]);
 
   const validationSchema = Yup.object({
     date: Yup.string().required("Required"),
@@ -59,16 +59,16 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                   alt="Main package"
                 />
                 <div className="package-info flex-1 text-center text-black">
-                  <h3 className="text-xl font-medium mb-1">{title}</h3>
-                  <p className="text-black text-base mb-1">{description}</p>
+                  <h3 className="text-xl font-medium mb-1">{serviceData.name}</h3>
+                  <p className="text-black text-base mb-1">{serviceData.description}</p>
                   <p className="text-black text-base">
-                    Giá từ <span className="text-black">{price}</span> VNĐ
+                    Giá từ <span className="text-black">{serviceData.price}</span> VNĐ
                   </p>
                 </div>
               </div>
 
               <div className="thumbnail-container flex gap-4 flex-nowrap overflow-x-auto h-[30%]">
-                {images.map((image, index) => (
+                {/* {images.map((image, index) => (
                   <img
                     className={`w-[100px] h-[100px] rounded-md object-cover cursor-pointer transition-transform ${selectedImage === image ? "border-2 border-blue-500 scale-105" : ""
                       }`}
@@ -77,7 +77,7 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                     alt={`Thumbnail ${index}`}
                     onClick={() => setSelectedImage(image)}
                   />
-                ))}
+                ))} */}
               </div>
             </div>
 
@@ -86,14 +86,13 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
               <Formik
                 initialValues={{
                   email: email || "",
-                  date: "",
+                  bookTime: "",
                   time: "",
-                  address: "",
-                  note: "",
+                  location: "",
+                  message: "",
                 }}
                 validationSchema={validationSchema}
                 onSubmit={async (values: FormBooking, { resetForm }) => {
-
                   const token = Cookies.get("token");
                   if (!token) {
                     alert("Vui lòng đăng nhập để đặt lịch!");
@@ -101,7 +100,8 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                   }
 
                   try {
-                    const res = await API_SubmitBooking(values, token);
+                    if (!serviceData) return; // đảm bảo có dữ liệu
+                    const res = await API_SubmitBooking(values, token, serviceData.id);
                     alert("Gửi thông tin thành công!");
                     resetForm();
                     handleClose();
@@ -109,6 +109,7 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                     alert("Có lỗi xảy ra, vui lòng thử lại!");
                   }
                 }}
+
               >
                 <Form className="form-container flex flex-col gap-2 h-full">
                   <h2 className="text-black text-xl">Fill in the information to complete the booking</h2>

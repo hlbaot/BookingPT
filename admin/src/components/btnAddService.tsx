@@ -24,8 +24,8 @@ const styleModal = {
 };
 
 interface Values {
-  namePackage: string;
-  pricePackage: number;
+  name: string;
+  price: number;
   description: string;
 }
 
@@ -105,8 +105,8 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
           <h1 className="text-center font-bold text-xl">Nhập thông tin gói mới</h1>
           <Formik
             initialValues={{
-              namePackage: '',
-              pricePackage: 0,
+              name: '',
+              price: 0,
               description: '',
             }}
             validationSchema={validationSchema}
@@ -120,7 +120,7 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
                   <div className="w-1/2">
                     <label
                       htmlFor="namePackage"
-                      className={`block text-sm font-medium mb-1 ${errors.namePackage ? 'text-red-600' : ''
+                      className={`block text-sm font-medium mb-1 ${errors.name ? 'text-red-600' : ''
                         }`}
                     >
                       Tên gói
@@ -129,7 +129,7 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
                       id="namePackage"
                       name="namePackage"
                       placeholder="Nhập tên gói"
-                      className={`w-full border ${errors.namePackage ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full border ${errors.name ? 'border-red-500' : 'border-gray-300'
                         } rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400`}
                     />
                     <ErrorMessage
@@ -142,7 +142,7 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
                   <div className="w-1/2">
                     <label
                       htmlFor="pricePackage"
-                      className={`block text-sm font-medium mb-1 ${errors.pricePackage ? 'text-red-600' : ''
+                      className={`block text-sm font-medium mb-1 ${errors.price ? 'text-red-600' : ''
                         }`}
                     >
                       Giá gói
@@ -152,7 +152,7 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
                       name="pricePackage"
                       placeholder="0"
                       type="number"
-                      className={`w-full border ${errors.pricePackage ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full border ${errors.price ? 'border-red-500' : 'border-gray-300'
                         } rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400`}
                     />
                     <ErrorMessage

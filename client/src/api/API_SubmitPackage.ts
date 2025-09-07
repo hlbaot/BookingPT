@@ -1,9 +1,13 @@
+// api/API_SubmitPackage.ts
 import axios from "axios";
-//  gửi lịch đặt
-export async function API_SubmitBooking(values: FormBooking, token: string) {
+export async function API_SubmitBooking(
+  values: FormBooking,
+  token: string,
+  packageId: number
+) {
   try {
     const response = await axios.post<FormBooking>(
-      "https://your-api-endpoint.com/formBooking",
+      `http://192.168.192.189:8080/formBookings/create?packageId=${packageId}`,
       values,
       { headers: { Authorization: `Bearer ${token}` } }
     );

@@ -61,7 +61,7 @@ const Service: React.FC = () => {
               <div className="flex flex-col md:flex-row w-full max-w-7xl mx-auto px-[4rem]">
                 {/* Left */}
                 <div className="left flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-1/2">
-                  <div className="flex flex-col md:flex-row items-center gap-4">
+                  {/* <div className="flex flex-col md:flex-row items-center gap-4">
                     {item.images?.length > 1 && (
                       <img
                         className="h-[230px] w-[160px] object-cover rounded-lg md:rounded-none hidden md:block"
@@ -86,13 +86,13 @@ const Service: React.FC = () => {
                         data-aos="fade-up"
                       />
                     )}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Right */}
                 <div className="right flex flex-col items-center justify-center w-full md:w-1/2">
                   <p className="text-white text-center text-[24px] md:text-3xl font-bold tracking-wide max-w-md mx-auto">
-                    {item.title}
+                    {item.name}
                   </p>
                   <p className="text-white text-center text-lg md:text-xl font-light max-w-sm mx-auto">
                     {item.description}

@@ -9,8 +9,8 @@ import Cookies from 'js-cookie';
 
 interface ServicePackage {
   id: number;
-  namePackage: string;
-  pricePackage: number;
+  name: string;
+  price: number;
   description: string;
 }
 
@@ -19,8 +19,8 @@ function ManagerService() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editData, setEditData] = useState<ServicePackage>({
     id: 0,
-    namePackage: '',
-    pricePackage: 0,
+    name: '',
+    price: 0,
     description: '',
   });
   const [openModal, setOpenModal] = useState(false);
@@ -42,7 +42,7 @@ function ManagerService() {
         // Chuyển price từ string thành number
         const packages = response.data.packages.map((pkg: ServicePackage) => ({
           ...pkg,
-          price: parseFloat(String(pkg.pricePackage)), 
+          price: parseFloat(String(pkg.price)), 
         }));
 
         setData(packages); // Cập nhật state data
@@ -120,12 +120,12 @@ function ManagerService() {
 
   const handleSave = async (index: number) => {
     try {
-      const { id, namePackage, pricePackage, description } = editData;
+      const { id, name, price, description } = editData;
 
       // Tạo payload gửi BE (chỉ gửi nếu không undefined)
       const payload: any = { id };
-      if (namePackage !== undefined) payload.name = namePackage;
-      if (pricePackage !== undefined) payload.price = pricePackage;
+      if (name !== undefined) payload.name = name;
+      if (price !== undefined) payload.price = price;
       if (description !== undefined) payload.description = description;
 
       //API_UPDATE_PACKAGE
@@ -208,12 +208,12 @@ function ManagerService() {
                       <input
                         type="text"
                         name="name"
-                        value={editData.namePackage}
+                        value={editData.name}
                         onChange={handleEditChange}
                         className="border rounded px-2 py-1 w-full"
                       />
                     ) : (
-                      item.namePackage
+                      item.name
                     )}
                   </td>
                   <td className="border px-4 py-2">
@@ -221,13 +221,13 @@ function ManagerService() {
                       <input
                         type="text"
                         name="price"
-                        value={editData.pricePackage.toString()}
+                        value={editData.price.toString()}
                         onChange={handleEditChange}
                         className="border rounded px-2 py-1 w-full"
                       />
                     ) : (
                       <>
-                        {item.pricePackage.toLocaleString()}
+                        {item.price.toLocaleString()}
                         <span> VNĐ</span>
                       </>
                     )}

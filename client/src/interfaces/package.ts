@@ -1,7 +1,7 @@
 interface Package {
     id: number;
-    images: string[];
-    title: string;
+    // images: string[];
+    name: string;
     description?: string;
     price: number;
 }

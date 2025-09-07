@@ -1,8 +1,7 @@
 
 interface FormBooking {
-  email: string;
-  date: string;
+  bookTime: string;
   time: string;
-  address: string;
-  note?: string
+  location: string;
+  message?: string
 }
