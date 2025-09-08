@@ -23,11 +23,6 @@ const styleModal = {
   borderRadius: 5,
 };
 
-interface Values {
-  name: string;
-  price: number;
-  description: string;
-}
 
 const validationSchema = Yup.object({
   namePackage: Yup.string().required('Tên gói là bắt buộc'),

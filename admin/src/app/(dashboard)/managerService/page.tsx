@@ -4,15 +4,12 @@ import '@/styles/managerService.scss';
 import ButtonAddService from '@/components/btnAddService';
 import Swal from 'sweetalert2';
 import ModalPackage from '@/components/modalPackage';
-import axios from 'axios';
 import Cookies from 'js-cookie';
-
-interface ServicePackage {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-}
+import {
+  API_GetPackages,
+  API_DeleteService,
+  API_UpdateService
+} from '@/api/API_mngService';
 
 function ManagerService() {
   const [data, setData] = useState<ServicePackage[]>([]);
@@ -28,30 +25,26 @@ function ManagerService() {
 
   const token = Cookies.get('token');
 
-  //Chỗ mới sửa
+  // Fetch danh sách dịch vụ
   useEffect(() => {
     const fetchData = async () => {
       try {
-        //API_GET_PACKAGE
-        const response = await axios.get("", {
-          headers: {
-            Authorization:`Bearer ${token}`,
-          },
-        });
+        if (!token) return;
+        const response = await API_GetPackages(token);
 
-        // Chuyển price từ string thành number
-        const packages = response.data.packages.map((pkg: ServicePackage) => ({
+        // Chuyển price từ string -> number
+        const packages = response.packages.map((pkg: ServicePackage) => ({
           ...pkg,
-          price: parseFloat(String(pkg.price)), 
+          price: parseFloat(String(pkg.price)),
         }));
 
-        setData(packages); // Cập nhật state data
+        setData(packages);
       } catch (error) {
         console.error('Lỗi khi lấy danh sách dịch vụ:', error);
       }
     };
     fetchData();
-  }, []);//đến đây
+  }, [token]);
 
   const handleAddService = (newService: ServicePackage) => {
     setData((prevData) => [...prevData, newService]);
@@ -67,16 +60,9 @@ function ManagerService() {
       confirmButtonText: 'Xóa!',
       cancelButtonText: 'Hủy',
     }).then(async (result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed && token) {
         try {
-          //API_DELETE_SERVICE
-          await axios.delete("", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            data: { package_id: id }
-          });
-
+          await API_DeleteService(id, token);
           setData((prevData) => prevData.filter((item) => item.id !== id));
 
           Swal.fire({
@@ -84,7 +70,6 @@ function ManagerService() {
             text: 'Gói dịch vụ đã được xóa thành công.',
             icon: 'success',
             timer: 1500,
-            confirmButtonText: 'OK',
           });
         } catch (error) {
           console.error('Lỗi khi xóa gói dịch vụ:', error);
@@ -93,7 +78,6 @@ function ManagerService() {
             text: 'Có lỗi xảy ra khi xóa gói dịch vụ!',
             icon: 'error',
             timer: 1500,
-            confirmButtonText: 'OK',
           });
         }
       }
@@ -116,30 +100,17 @@ function ManagerService() {
     }));
   };
 
-
-
-  const handleSave = async (index: number) => {
+  const handleSave = async () => {
     try {
-      const { id, name, price, description } = editData;
+      if (!token) return;
+      const payload: any = { id: editData.id };
+      if (editData.name !== undefined) payload.name = editData.name;
+      if (editData.price !== undefined) payload.price = editData.price;
+      if (editData.description !== undefined) payload.description = editData.description;
 
-      // Tạo payload gửi BE (chỉ gửi nếu không undefined)
-      const payload: any = { id };
-      if (name !== undefined) payload.name = name;
-      if (price !== undefined) payload.price = price;
-      if (description !== undefined) payload.description = description;
+      const response = await API_UpdateService(payload, token);
 
-      //API_UPDATE_PACKAGE
-      const response = await axios.put(
-        "",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
+      if (response) {
         const newData = [...data];
         const dataIndex = newData.findIndex((item) => item.id === editData.id);
         if (dataIndex !== -1) {
@@ -152,7 +123,6 @@ function ManagerService() {
           text: 'Gói dịch vụ đã được cập nhật.',
           icon: 'success',
           timer: 1500,
-          confirmButtonText: 'OK',
         });
         setEditingIndex(null);
       }
@@ -162,11 +132,9 @@ function ManagerService() {
         title: 'Lỗi!',
         text: 'Không thể cập nhật gói dịch vụ. Vui lòng thử lại.',
         icon: 'error',
-        confirmButtonText: 'OK',
       });
     }
   };
-
 
   const handleOpenModal = (item: ServicePackage) => {
     setSelectedPackage(item);
@@ -227,8 +195,7 @@ function ManagerService() {
                       />
                     ) : (
                       <>
-                        {item.price.toLocaleString()}
-                        <span> VNĐ</span>
+                        {item.price.toLocaleString()} <span>VNĐ</span>
                       </>
                     )}
                   </td>
@@ -250,18 +217,24 @@ function ManagerService() {
                       {editingIndex === item.id ? (
                         <>
                           <button
-                            onClick={() => handleSave(item.id)}
+                            onClick={handleSave}
                             className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm"
                           >
                             Lưu
                           </button>
-                          <button onClick={() => setEditingIndex(null)} className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm">Hủy</button>
+                          <button
+                            onClick={() => setEditingIndex(null)}
+                            className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm"
+                          >
+                            Hủy
+                          </button>
                         </>
                       ) : (
                         <>
                           <button
                             onClick={() => handleOpenModal(item)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+                          >
                             Xem
                           </button>
                           <button
@@ -296,7 +269,6 @@ function ManagerService() {
           data={selectedPackage}
         />
       )}
-
     </div>
   );
 }

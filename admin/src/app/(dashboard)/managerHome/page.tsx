@@ -1,9 +1,9 @@
 'use client';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import '@/styles/managerHome.scss';
 import ButtonAddImg from '@/components/btnAddImg';
+import { API_DeleteImage } from '@/api/API_deleteImgHome';
 import Cookies from 'js-cookie';
 
 const ManagerHome: React.FC = () => {
@@ -41,38 +41,30 @@ const ManagerHome: React.FC = () => {
       confirmButtonText: "Xóa!",
       cancelButtonText: "Hủy"
     });
-  
+
     if (result.isConfirmed) {
       try {
-        const token = Cookies.get('token');
-        await axios.delete('http://localhost:3001/delete-image', {
-          data: { public_id },
-          // headers: {
-          //   Authorization: `Bearer ${token}`
-          // }
-        });
-  
+        const token = Cookies.get('token')!; 
+        await API_DeleteImage(public_id, token);
+
         const updatedImages = images.filter(img => img.public_id !== public_id);
         setImages(updatedImages);
-  
         localStorage.setItem('images', JSON.stringify(updatedImages));
+
         Swal.fire({
           title: 'Xóa ảnh thành công!',
           icon: 'success',
-          confirmButtonText: 'OK',
           timer: 2000,
         });
       } catch (error) {
         Swal.fire({
           title: 'Xóa ảnh thất bại!',
           icon: 'error',
-          confirmButtonText: 'OK',
           timer: 2000,
         });
       }
     }
   };
-  
 
 
   return (

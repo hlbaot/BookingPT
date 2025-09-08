@@ -1,16 +1,15 @@
 'use client';
 
 import React from 'react';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import '@/styles/login.scss';
 import { Formik, Form, Field } from 'formik';
-// import API_Signin from '../api/signin';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { API_Signin } from '@/api/API_Login';
 
 interface SigninProps {
-  onLogin: () => void; 
+  onLogin: () => void;
 }
 
 const Signin: React.FC<SigninProps> = ({ onLogin }) => {
@@ -21,15 +20,10 @@ const Signin: React.FC<SigninProps> = ({ onLogin }) => {
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     try {
-      const res = await axios.post("API_SignIn", {
-        username: values.username,
-        password: values.password,
-      });
+      const res = await API_Signin(values.username, values.password);
 
-      if (res.data.token) {
-        // ✅ lưu token vào cookies (7 ngày)
-        Cookies.set('token', res.data.token, { expires: 7 });
-
+      if (res.token) {
+        Cookies.set('token', res.token, { expires: 7 }); // lưu token 7 ngày
         onLogin();
 
         Swal.fire({
@@ -40,7 +34,6 @@ const Signin: React.FC<SigninProps> = ({ onLogin }) => {
           showConfirmButton: false,
         });
 
-        // ✅ chuyển trang bằng useRouter
         router.push('/dashboard/managerHome');
       } else {
         Swal.fire({

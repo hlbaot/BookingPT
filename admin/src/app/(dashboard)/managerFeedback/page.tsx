@@ -1,15 +1,9 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import axios from 'axios';
-import '@/styles/managerFeedback.scss';
 import Cookies from 'js-cookie';
-
-interface Feedback {
-  email: string;
-  stars: string;
-  feedback: string;
-}
+import '@/styles/managerFeedback.scss';
+import { API_GetFeedbacks, API_DeleteFeedback } from '@/api/API_mngFeedback';
 
 const ManagerFeedback: React.FC = () => {
   const [data, setData] = useState<Feedback[]>([]);
@@ -17,7 +11,6 @@ const ManagerFeedback: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const token = Cookies.get('token');
-
       if (!token) {
         Swal.fire({
           title: 'Lỗi!',
@@ -29,14 +22,9 @@ const ManagerFeedback: React.FC = () => {
       }
 
       try {
-        const response = await axios.get('https://api.yourbackend.com/feedback', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        if (Array.isArray(response.data)) {
-          setData(response.data);
+        const feedbacks = await API_GetFeedbacks(token);
+        if (Array.isArray(feedbacks)) {
+          setData(feedbacks);
         } else {
           setData([]);
         }
@@ -50,17 +38,8 @@ const ManagerFeedback: React.FC = () => {
   }, []);
 
   const handleDelete = (email: string) => {
-    const token = sessionStorage.getItem('token');
-
-    if (!token) {
-      Swal.fire({
-        title: 'Lỗi!',
-        text: 'Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-      return;
-    }
+    const token = Cookies.get('token');
+    if (!token) return;
 
     Swal.fire({
       title: "Bạn chắc chắn muốn xóa?",
@@ -73,13 +52,7 @@ const ManagerFeedback: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete('https://api.yourbackend.com/feedback', {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
-            data: { email }
-          });
-
+          await API_DeleteFeedback(email, token);
           setData(prevData => prevData.filter(item => item.email !== email));
 
           Swal.fire({
@@ -87,7 +60,6 @@ const ManagerFeedback: React.FC = () => {
             text: 'Feedback đã được xóa thành công.',
             icon: 'success',
             timer: 2000,
-            confirmButtonText: 'OK'
           });
         } catch (error) {
           console.error('Lỗi khi xóa feedback:', error);
@@ -96,13 +68,11 @@ const ManagerFeedback: React.FC = () => {
             text: 'Có lỗi xảy ra khi xóa Feedback!',
             icon: 'error',
             timer: 2000,
-            confirmButtonText: 'OK'
           });
         }
       }
     });
   };
-
 
   return (
     <div>

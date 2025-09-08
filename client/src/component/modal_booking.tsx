@@ -18,7 +18,7 @@ interface CustomModalProps {
 export default function CustomModal({ open, handleClose, serviceData }: CustomModalProps) {
   if (!serviceData) return null;
 
-  // const { title, description, price, images } = serviceData;
+  // const { name, description, price, images } = serviceData;
   const [selectedImage, setSelectedImage] = useState<string>("");
 
   // useEffect(() => {
@@ -144,14 +144,10 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                     <div className="form-field flex-1 min-w-[150px]">
                       <label className="block text-sm mb-1 text-black">Time</label>
                       <Field
-                        as="select"
                         name="time"
+                        type="time"
                         className="w-full p-2 border border-gray-300 rounded-md text-black text-sm"
-                      >
-                        <option value="">-- Chọn khung giờ --</option>
-                        <option value="7-11">07:00 - 11:00</option>
-                        <option value="13-17">13:00 - 17:00</option>
-                      </Field>
+                      />
                       <ErrorMessage name="time" component="div" className="text-red-500 text-xs mt-1" />
                     </div>
                   </div>
