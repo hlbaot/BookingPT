@@ -1,15 +1,15 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import Cookies from "js-cookie"
-import axios from "axios";
+import Cookies from "js-cookie";
 import "../styles/Review.scss";
+import { API_SubmitFeedBack } from "../api/API_Feedback";
 
 const Review: React.FC = () => {
   const [rating, setRating] = useState<number>(0);
 
-  //get email từ cookies
+  // get email từ cookies
   const email = Cookies.get("email");
 
   return (
@@ -23,7 +23,6 @@ const Review: React.FC = () => {
               message: Yup.string().required("Feedback is required"),
             })}
             onSubmit={async (values, { resetForm }) => {
-
               const token = Cookies.get("token");
               if (!token) {
                 alert("Vui lòng đăng nhập để gửi feedback!");
@@ -31,19 +30,19 @@ const Review: React.FC = () => {
               }
 
               try {
-                const response = await axios.post("API_feedback", {
-                  ...values,
-                  rating,
-                });
+                await API_SubmitFeedBack(
+                  {
+                    ratingIndex: rating,
+                    content: values.message,
+                  },
+                  token
+                );
 
-                if (response.status === 200) {
-                  alert("Cảm ơn bạn đã gửi đánh giá!");
-                  resetForm();
-                  setRating(0);
-                }
+                alert("Cảm ơn bạn đã gửi đánh giá!");
+                resetForm();
+                setRating(0);
               } catch (error) {
                 alert("Có lỗi xảy ra, vui lòng thử lại!");
-                console.error("Error submitting feedback:", error);
               }
             }}
           >

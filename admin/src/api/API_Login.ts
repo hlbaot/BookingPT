@@ -1,13 +1,12 @@
 import axios from "axios";
+import { LoginRequest, LoginResponse } from "@/interfaces/login";
 
-interface LoginResponse {
-  token: string;
-}
 
-export async function API_Signin(username: string, password: string): Promise<LoginResponse> {
-  const response = await axios.post<LoginResponse>(
-    "http://localhost:8080/auth/signin", 
-    { username, password }
+// API request login
+export const API_Signin = async (values: LoginRequest): Promise<LoginResponse> => {
+  const res = await axios.post<LoginResponse>(
+    "http://192.168.192.189:8080/auth/login",
+    values
   );
-  return response.data;
-}
+  return res.data;
+};

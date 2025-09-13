@@ -1,15 +1,18 @@
+// src/api/API_Feedback.ts
 import axios from "axios";
-//  gửi feedback
+
 export async function API_SubmitFeedBack(values: FormFeedback, token: string) {
   try {
-    const response = await axios.post<FormBooking>(
-      "http://192.168.192.189:8080/ratings",
+    const response = await axios.post(
+      "http://192.168.192.189:8080/ratings/create",
       values,
-      { headers: { Authorization: `Bearer ${token}` } }
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
     return response.data;
   } catch (error: any) {
-    console.error("Error submitting booking:", error.message || error);
+    console.error("Error submitting feedback:", error.message || error);
     throw error;
   }
 }

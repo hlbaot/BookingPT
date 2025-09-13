@@ -10,16 +10,16 @@ export default function DashBoradLayout({ children }: { children: React.ReactNod
     const router = useRouter();
     const [authChecked, setAuthChecked] = useState(false);
 
-    // useEffect(() => {
-    //     const token = Cookies.get('token');
-    //     if (!token) {
-    //         router.push('/login');
-    //     } else {
-    //         setAuthChecked(true);
-    //     }
-    // }, []);
+    useEffect(() => {
+        const token = Cookies.get('token');
+        if (!token) {
+            router.push('/login');
+        } else {
+            setAuthChecked(true);
+        }
+    }, []);
 
-    // if (!authChecked) return null;
+    if (!authChecked) return null;
 
     return (
         <>

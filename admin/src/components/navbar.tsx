@@ -8,7 +8,7 @@ import '@/styles/navbar.scss'
 const Navbar: React.FC = () => {
   const handleLogout = () => {
     Cookies.remove('token')
-    window.location.href = '/auth/login'
+    window.location.href = '/login'
   }
 
   return (

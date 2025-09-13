@@ -22,7 +22,7 @@ const FormSignIn: React.FC<Props> = ({ switchToSignUp }) => {
                 const data = await API_SignIn(values);
 
                 if (data.token) {
-                    Cookies.set("token", data.token, { expires: 7 });
+                    Cookies.set("token", data.token);
                     Cookies.set("email", values.email);
                     window.location.reload();
                 }

@@ -1,98 +1,43 @@
 'use client';
-import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_UPLOAD_URL } from "@/api/API_cloudinary";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 type Props = {
   index: number;
-  packageId: number | string;
+  imageUrl: string | null;
+  onDeleted: () => void;
 };
 
-function ImageUploadBox({ index, packageId }: Props) {
-  const [image, setImage] = useState<string | null>(null);
+function ImageUploadBox({ index, imageUrl, onDeleted }: Props) {
   const uniqueId = `photo-upload-${index}`;
-  const key = `uploaded_image_${packageId}_${index}`;
 
-  useEffect(() => {
-    const savedImage = localStorage.getItem(key);
-    if (savedImage) {
-      setImage(savedImage);
-    } else {
-      setImage(null);
-    }
-  }, [key]);
-
+  // chỉ upload Cloudinary, không gửi về BE
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const token = Cookies.get("token");
-    if (!token) {
-      Swal.fire({
-        title: "Lỗi",
-        text: "Không tìm thấy token xác thực. Vui lòng đăng nhập lại.",
-        icon: "error",
-      });
-      return;
-    }
-
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "manager_img");
-    formData.append("folder", `service/package_${packageId}`);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
     try {
-      const cloudRes = await axios.post(
-        "https://api.cloudinary.com/v1_1/djpujlimr/image/upload",
+      await axios.post(
+        CLOUDINARY_UPLOAD_URL,
         formData
       );
 
-      const secureUrl = cloudRes.data.secure_url;
-      if (secureUrl) {
-        // Gọi API server backend của bạn để lưu ảnh vào DB
-        const saveRes = await axios.post(
-          "/api/save-image",
-          {
-            imageUrl: secureUrl,
-            packageId,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (saveRes.data.success) {
-          setImage(secureUrl);
-          localStorage.setItem(key, secureUrl);
-        } else {
-          throw new Error("Lưu ảnh thất bại ở server");
-        }
-      }
-    } catch (error) {
-      console.error("Lỗi khi upload ảnh:", error);
-      Swal.fire({
-        title: "Lỗi",
-        text: "Không thể tải ảnh lên",
-        icon: "error",
-      });
+      Swal.fire("Thành công", "Ảnh đã được tải lên Cloudinary!", "success");
+      // hết, không gọi BE
+    } catch (err) {
+      console.error("Upload thất bại:", err);
+      Swal.fire("Lỗi", "Không thể upload ảnh", "error");
     }
   };
 
+  // gọi API BE để xóa
   const handleRemove = async () => {
-    if (!image) return;
-
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-      Swal.fire({
-        title: "Lỗi",
-        text: "Không tìm thấy token xác thực. Vui lòng đăng nhập lại.",
-        icon: "error",
-      });
-      return;
-    }
+    if (!imageUrl) return;
 
     const confirm = await Swal.fire({
       title: "Bạn có chắc muốn xóa ảnh này?",
@@ -102,68 +47,35 @@ function ImageUploadBox({ index, packageId }: Props) {
       cancelButtonText: "Hủy",
       confirmButtonColor: "#ef4444",
       cancelButtonColor: "#d1d5db",
-      customClass: {
-        popup: 'z-super',
-      },
     });
 
     if (confirm.isConfirmed) {
       try {
-        const res = await axios.delete(
-          "/api/delete-image",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            data: {
-              imageUrl: image,
-              packageId,
-            },
-          }
-        );
-
-        if (res.data.success) {
-          localStorage.removeItem(key);
-          setImage(null);
-
-          Swal.fire({
-            title: "Đã xóa ảnh!",
-            icon: "success",
-            customClass: {
-              popup: 'z-super',
-            },
-          });
-        } else {
-          throw new Error("Xóa thất bại ở server");
-        }
-      } catch (err) {
-        console.error("Lỗi khi xóa ảnh:", err);
-        Swal.fire({
-          title: "Lỗi",
-          text: "Không thể xóa ảnh",
-          icon: "error",
-          customClass: {
-            popup: 'z-super',
-          },
+        await axios.delete(`/api/delete-image`, {
+          data: { imageUrl },
         });
+
+        Swal.fire("Đã xóa ảnh!", "", "success");
+        onDeleted(); // reload ảnh từ BE
+      } catch (err) {
+        console.error("Xóa ảnh thất bại:", err);
+        Swal.fire("Lỗi", "Không thể xóa ảnh", "error");
       }
     }
   };
 
-
   return (
-    <div className="bg-white rounded-xl shadow-md w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 flex items-center justify-center relative overflow-hidden transition-all duration-300">
-      {image ? (
+    <div className="bg-white rounded-xl shadow-md w-40 h-40 flex items-center justify-center relative overflow-hidden">
+      {imageUrl ? (
         <>
           <img
-            src={image}
+            src={imageUrl}
             alt="Uploaded"
             className="w-full h-full object-cover rounded-xl"
           />
           <button
             onClick={handleRemove}
             className="absolute top-2 right-2 bg-white rounded-full text-black text-sm w-6 h-6 flex items-center justify-center hover:bg-red-500 hover:text-white"
-            title="Xóa ảnh"
           >
             ×
           </button>

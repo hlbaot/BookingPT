@@ -15,6 +15,7 @@ export default function Head() {
 
     const handleLogout = () => {
         Cookies.remove("email");
+        Cookies.remove("token");
         window.location.reload();
     }
 
