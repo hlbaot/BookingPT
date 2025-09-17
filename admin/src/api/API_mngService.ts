@@ -10,9 +10,21 @@ export async function API_GetPackages(token: string) {
   return res.data;
 }
 
+// Tạo gói dịch vụ
+export async function API_CreateService(payload: {
+  name: string;
+  price: number;
+  description: string;
+}, token: string) {
+  const res = await axios.post(`${API_BASE_URL}/packages/create`, payload, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+}
+
 // Xóa gói dịch vụ
 export async function API_DeleteService(id: number, token: string) {
-  const res = await axios.delete(`${API_BASE_URL}/packages`, {
+  const res = await axios.delete(`${API_BASE_URL}/packages/delete?packageId=${id}`, {
     headers: { Authorization: `Bearer ${token}` },
     data: { package_id: id },
   });
@@ -20,8 +32,12 @@ export async function API_DeleteService(id: number, token: string) {
 }
 
 // Cập nhật gói dịch vụ
-export async function API_UpdateService(payload: Partial<ServicePackage>, token: string) {
-  const res = await axios.put(`${API_BASE_URL}/packages`, payload, {
+export async function API_UpdateService(
+  id: number,
+  payload: Partial<{ name: string; price: number; description: string }>,
+  token: string
+) {
+  const res = await axios.put(`${API_BASE_URL}/packages/update?packageId=${id}`, payload, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;

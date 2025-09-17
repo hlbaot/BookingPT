@@ -12,7 +12,7 @@ type Props = {
 function ImageUploadBox({ index, imageUrl, onDeleted }: Props) {
   const uniqueId = `photo-upload-${index}`;
 
-  // chỉ upload Cloudinary, không gửi về BE
+ //uplaod lên cloudinary và gửi json ảnh về be
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -22,13 +22,24 @@ function ImageUploadBox({ index, imageUrl, onDeleted }: Props) {
     formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
     try {
-      await axios.post(
-        CLOUDINARY_UPLOAD_URL,
-        formData
-      );
+      const response = await axios.post(CLOUDINARY_UPLOAD_URL, formData);
 
-      Swal.fire("Thành công", "Ảnh đã được tải lên Cloudinary!", "success");
-      // hết, không gọi BE
+      if (response) {
+        const imageUrl = response.data.secure_url;
+        // console.log('Upload thành công:', imageUrl);
+        // gửi ảnh về BE thông qua api
+        await axios.post("http://localhost:5000/api/posts", {
+          imageUrl: imageUrl,
+        });
+
+        Swal.fire({
+          title: "Thành công",
+          text: "Upload ảnh thành công!",
+          icon: "success",
+          timer: 2000,
+        });
+      }
+      else console.error('Upload thất bại', response);
     } catch (err) {
       console.error("Upload thất bại:", err);
       Swal.fire("Lỗi", "Không thể upload ảnh", "error");

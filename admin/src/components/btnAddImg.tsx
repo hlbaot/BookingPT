@@ -14,16 +14,16 @@ const ButtonAddImg: React.FC<ButtonAddProps> = ({ onImageUpload }) => {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    else console.log('File đã chọn:', file);
 
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
     try {
-      const res = await axios.post(CLOUDINARY_UPLOAD_URL, formData);
-
-      const { secure_url, public_id } = res.data;
-      onImageUpload({ url: secure_url, public_id });
+      const response = await axios.post(CLOUDINARY_UPLOAD_URL, formData);
+      if(response) {
+        console.log('Upload thành công', response.data);
 
       Swal.fire({
         title: "Thành công",
@@ -31,6 +31,11 @@ const ButtonAddImg: React.FC<ButtonAddProps> = ({ onImageUpload }) => {
         icon: "success",
         timer: 2000,
       });
+      }
+      else console.error('Upload thất bại', response);
+
+
+
     } catch (error) {
       console.error('Upload thất bại', error);
       Swal.fire({

@@ -7,9 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Formik, Field, Form, FormikHelpers, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import Cookies from 'js-cookie';
+import { API_CreateService } from '@/api/API_mngService';
 
 const styleModal = {
   position: 'absolute',
@@ -47,15 +47,18 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
   ) => {
     try {
       const token = Cookies.get('token');
-      const response = await axios.post('http://localhost:3000/service-packages', values,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }
-        }
-      );
-
-      const newService = response.data;
+      if (!token) {
+        Swal.fire({
+          title: 'Lỗi!',
+          text: 'Không tìm thấy token xác thực. Vui lòng đăng nhập lại!',
+          icon: 'error',
+          timer: 2000,
+          confirmButtonText: 'OK',
+        });
+        setSubmitting(false);
+        return;
+      }
+      const newService = await API_CreateService(values, token);
 
       onAddService(newService);
 
@@ -121,14 +124,14 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
                       Tên gói
                     </label>
                     <Field
-                      id="namePackage"
-                      name="namePackage"
+                      id="name"
+                      name="name"
                       placeholder="Nhập tên gói"
                       className={`w-full border ${errors.name ? 'border-red-500' : 'border-gray-300'
                         } rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400`}
                     />
                     <ErrorMessage
-                      name="namePackage"
+                      name="name"
                       component="div"
                       className="text-red-500 text-sm mt-1"
                     />
@@ -136,22 +139,22 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
 
                   <div className="w-1/2">
                     <label
-                      htmlFor="pricePackage"
+                      htmlFor="price"
                       className={`block text-sm font-medium mb-1 ${errors.price ? 'text-red-600' : ''
                         }`}
                     >
                       Giá gói
                     </label>
                     <Field
-                      id="pricePackage"
-                      name="pricePackage"
+                      id="price"
+                      name="price"
                       placeholder="0"
                       type="number"
                       className={`w-full border ${errors.price ? 'border-red-500' : 'border-gray-300'
                         } rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400`}
                     />
                     <ErrorMessage
-                      name="pricePackage"
+                      name="price"
                       component="div"
                       className="text-red-500 text-sm mt-1"
                     />
