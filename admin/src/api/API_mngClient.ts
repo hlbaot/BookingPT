@@ -18,21 +18,22 @@ export async function API_GetPackages(token: string) {
   return res.data;
 }
 
-// Xóa booking theo email
+// Xóa lịch booking theo email
 export async function API_DeleteBooking(email: string, token: string) {
-  const res = await axios.delete(`${API_BASE_URL}/bookings`, {
+  const res = await axios.delete(`${API_BASE_URL}/bookings?email=${email}`, {
     headers: { Authorization: `Bearer ${token}` },
-    data: { email },
+    // data: { email },
   });
   return res.data;
 }
 
 // Duyệt booking theo email
 export async function API_ApproveBooking(email: string, token: string) {
-  const res = await axios.patch(
-    `${API_BASE_URL}/bookings`,
+  const res = await axios.patch(`${API_BASE_URL}/bookings`,
     { email, status: "Đã duyệt" },
-    { headers: { Authorization: `Bearer ${token}` } }
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
   );
   return res.data;
 }

@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import '@/styles/managerFeedback.scss';
 import { API_GetFeedbacks, API_DeleteFeedback } from '@/api/API_mngFeedback';
 
+
 const ManagerFeedback: React.FC = () => {
   const [data, setData] = useState<Feedback[]>([]);
 
@@ -96,8 +97,8 @@ const ManagerFeedback: React.FC = () => {
               data.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="border px-4 py-2">{item.email}</td>
-                  <td className="border px-4 py-2 text-yellow-500">{item.stars}</td>
-                  <td className="border px-4 py-2">{item.feedback}</td>
+                  <td className="border px-4 py-2 text-yellow-500">{item.ratingIndex}</td>
+                  <td className="border px-4 py-2">{item.content}</td>
                   <td className="border px-4 py-2">
                     <button
                       type="button"

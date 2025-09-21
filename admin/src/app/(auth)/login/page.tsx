@@ -39,6 +39,7 @@ const Signin: React.FC<SigninProps> = ({ onLogin }) => {
           }
 
           Cookies.set("token", data.token);
+          
 
           Swal.fire({
             icon: "success",

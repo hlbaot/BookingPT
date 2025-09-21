@@ -11,31 +11,16 @@ import {
   API_UpdateService
 } from '@/api/API_mngService';
 
-const fakedb: ServicePackage[] = [
-  {
-    id: 1,
-    name: 'Gói Cơ Bản',
-    price: 500000,
-    description: 'Chụp trong 1 giờ, 20 ảnh đã chỉnh sửa, không bao gồm in ấn.',
-    // imageUrl: []
-  },
-  {
-    id: 2,
-    name: 'Gói Nâng Cao',
-    price: 1000000,
-    description: 'Chụp trong 2 giờ, 50 ảnh đã chỉnh sửa, bao gồm in ấn cơ bản.',
-    // imageUrl: []
-  }]
 
 function ManagerService() {
-  const [data, setData] = useState<ServicePackage[]>(fakedb);
+  const [data, setData] = useState<ServicePackage[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editData, setEditData] = useState<ServicePackage>({
     id: 0,
     name: '',
     price: 0,
     description: '',
-    // imageUrl: []
+    imageUrls: []
   });
   const [openModal, setOpenModal] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<ServicePackage | null>(null);

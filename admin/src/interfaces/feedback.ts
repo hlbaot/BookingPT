@@ -1,5 +1,5 @@
 interface Feedback {
   email: string;
-  stars: string;
-  feedback: string;
+  ratingIndex: number;
+  content?: string;
 }

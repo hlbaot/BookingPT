@@ -1,196 +1,189 @@
 'use client';
 import * as React from 'react';
-import '@/styles/managerService.scss';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Formik, Field, Form, FormikHelpers, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import Cookies from 'js-cookie';
+import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { API_CreateService } from '@/api/API_mngService';
+import { CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_UPLOAD_URL } from "@/api/API_cloudinary";
 
 const styleModal = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: 600,
   bgcolor: 'background.paper',
   boxShadow: 24,
-  p: 2,
+  p: 4,
   borderRadius: 5,
 };
 
-
 const validationSchema = Yup.object({
-  namePackage: Yup.string().required('Tên gói là bắt buộc'),
-  pricePackage: Yup.number()
-    .min(0, 'Giá gói không được âm')
-    .required('Giá gói là bắt buộc'),
+  name: Yup.string().required('Tên gói là bắt buộc'),
+  price: Yup.number().min(0, 'Giá gói không được âm').required('Giá gói là bắt buộc'),
   description: Yup.string().required('Mô tả là bắt buộc'),
 });
 
-interface ButtonAddServiceProps {
-  onAddService: (newService: Values & { id: number }) => void;
-}
-
-const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => {
+export default function ButtonAddService({ onAddService }: { onAddService: (s: any) => void }) {
   const [open, setOpen] = React.useState(false);
+  const [previewImages, setPreviewImages] = React.useState<string[]>([]);
+
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setPreviewImages([]);
+    setOpen(false);
+  };
 
-  const handleSubmit = async (
-    values: Values,
-    { setSubmitting, resetForm }: FormikHelpers<Values>
-  ) => {
-    try {
-      const token = Cookies.get('token');
-      if (!token) {
-        Swal.fire({
-          title: 'Lỗi!',
-          text: 'Không tìm thấy token xác thực. Vui lòng đăng nhập lại!',
-          icon: 'error',
-          timer: 2000,
-          confirmButtonText: 'OK',
-        });
-        setSubmitting(false);
-        return;
-      }
-      const newService = await API_CreateService(values, token);
+  // Upload ảnh lên Cloudinary
+  const handleUploadImages = async (files: FileList): Promise<string[]> => {
+    const urls: string[] = [];
+    for (const file of Array.from(files)) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
-      onAddService(newService);
-
-      // Show success message
-      Swal.fire({
-        title: 'Thành công!',
-        text: 'Gói dịch vụ đã được tạo thành công.',
-        icon: 'success',
-        timer: 1500,
-        confirmButtonText: 'OK',
-      });
-
-      // Reset the form and close the modal
-      resetForm();
-      handleClose();
-    } catch (error) {
-      console.error('Lỗi khi tạo gói dịch vụ:', error);
-      Swal.fire({
-        title: 'Lỗi!',
-        text: 'Có lỗi xảy ra khi tạo gói dịch vụ!',
-        icon: 'error',
-        timer: 1500,
-        confirmButtonText: 'OK',
-      });
-    } finally {
-      setSubmitting(false);
+      const res = await axios.post(CLOUDINARY_UPLOAD_URL, formData);
+      urls.push(res.data.secure_url);
     }
+    return urls;
   };
 
   return (
     <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        sx={{
-          zIndex: 1000,
-        }}
-      >
+      <Modal open={open} onClose={handleClose}>
         <Box sx={styleModal}>
-          <h1 className="text-center font-bold text-xl">Nhập thông tin gói mới</h1>
-          <Formik
-            initialValues={{
-              name: '',
-              price: 0,
-              description: '',
-            }}
+          <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Tạo gói dịch vụ mới</h1>
+          <Formik<Values>
+            initialValues={{ name: '', price: 0, description: '', imageUrls: [] }}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-            validateOnBlur={false}
-            validateOnChange={false}
+            onSubmit={async (values, { setSubmitting, resetForm }) => {
+              try {
+                const token = Cookies.get('token');
+                if (!token) {
+                  Swal.fire("Lỗi", "Vui lòng đăng nhập lại!", "error");
+                  alert("Vui lòng đăng nhập lại!");
+                  return;
+                }
+
+                const newService = await API_CreateService(values, token);
+                onAddService(newService);
+
+                Swal.fire("Thành công", "Gói đã được tạo!", "success");
+                alert("Gói đã được tạo!");
+                resetForm();
+                handleClose();
+              } catch (err) {
+                console.error(err);
+                Swal.fire("Lỗi", "Không thể tạo gói!", "error");
+                alert("Không thể tạo gói!");
+              } finally {
+                setSubmitting(false);
+              }
+            }}
           >
-            {({ errors }) => (
-              <Form className="space-y-6 mt-4">
-                <div className="flex gap-4">
-                  <div className="w-1/2">
-                    <label
-                      htmlFor="namePackage"
-                      className={`block text-sm font-medium mb-1 ${errors.name ? 'text-red-600' : ''
-                        }`}
-                    >
-                      Tên gói
-                    </label>
+            {({ setFieldValue, isSubmitting }) => (
+              <Form className="space-y-6">
+                {/* Tên và Giá */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Tên gói</label>
                     <Field
                       id="name"
                       name="name"
-                      placeholder="Nhập tên gói"
-                      className={`w-full border ${errors.name ? 'border-red-500' : 'border-gray-300'
-                        } rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400`}
+                      placeholder="Tên gói"
+                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     />
-                    <ErrorMessage
-                      name="name"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
+                    <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-1" />
                   </div>
-
-                  <div className="w-1/2">
-                    <label
-                      htmlFor="price"
-                      className={`block text-sm font-medium mb-1 ${errors.price ? 'text-red-600' : ''
-                        }`}
-                    >
-                      Giá gói
-                    </label>
+                  <div>
+                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">Giá</label>
                     <Field
                       id="price"
                       name="price"
-                      placeholder="0"
                       type="number"
-                      className={`w-full border ${errors.price ? 'border-red-500' : 'border-gray-300'
-                        } rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400`}
+                      placeholder="0"
+                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     />
-                    <ErrorMessage
-                      name="price"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
+                    <ErrorMessage name="price" component="div" className="text-red-500 text-sm mt-1" />
                   </div>
                 </div>
 
+                {/* Mô tả */}
                 <div>
-                  <label
-                    htmlFor="description"
-                    className={`block text-sm font-medium mb-1 ${errors.description ? 'text-red-600' : ''
-                      }`}
-                  >
-                    Mô tả
-                  </label>
+                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">Mô tả</label>
                   <Field
                     as="textarea"
                     id="description"
                     name="description"
-                    placeholder="Nhập mô tả của bạn"
-                    rows={5}
-                    className={`w-full border ${errors.description ? 'border-red-500' : 'border-gray-300'
-                      } rounded-md px-3 py-2 text-sm resize-none outline-none focus:ring-2 focus:ring-blue-400`}
+                    placeholder="Nhập mô tả"
+                    rows={4}
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   />
-                  <ErrorMessage
-                    name="description"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
+                  <ErrorMessage name="description" component="div" className="text-red-500 text-sm mt-1" />
                 </div>
 
-                <button
-                  type="submit"
-                  className="px-[2rem] py-[5px] rounded-[10px] bg-green-500 text-white font-bold hover:bg-green-600 cursor-pointer"
-                >
-                  Tạo
-                </button>
+                {/* Upload ảnh */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Ảnh dịch vụ (tối đa 3)</label>
+                  <div className="flex gap-4 flex-wrap">
+                    {previewImages.map((url, idx) => (
+                      <div key={idx} className="relative w-28 h-28 rounded-lg overflow-hidden border">
+                        <img src={url} alt="Preview" className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newList = previewImages.filter((_, i) => i !== idx);
+                            setPreviewImages(newList);
+                            setFieldValue("imageUrls", newList);
+                          }}
+                          className="absolute top-1 right-1 bg-black/60 text-white w-6 h-6 flex items-center justify-center rounded-full hover:bg-red-600"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+
+                    {previewImages.length < 3 && (
+                      <label className="w-28 h-28 flex items-center justify-center border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-100 text-gray-500">
+                        <span className="text-2xl">+</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          className="hidden"
+                          onChange={async (e) => {
+                            if (!e.target.files) return;
+                            if (previewImages.length + e.target.files.length > 3) {
+                              Swal.fire("Lỗi", "Chỉ được chọn tối đa 3 ảnh", "warning");
+                              return;
+                            }
+                            const urls = await handleUploadImages(e.target.files);
+                            const newList = [...previewImages, ...urls].slice(0, 3);
+                            setPreviewImages(newList);
+                            setFieldValue("imageUrls", newList);
+                          }}
+                        />
+                      </label>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submit */}
+                <div className="text-center">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="mt-[3rem] w-[3rem] bg-green-500 text-white font-bold rounded-md hover:bg-green-600 disabled:opacity-50"
+                  >
+                    {isSubmitting ? "Đang tạo..." : "Tạo"}
+                  </button>
+                </div>
               </Form>
             )}
           </Formik>
@@ -199,7 +192,7 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
 
       <button
         onClick={handleOpen}
-        className="bg-green-500 rounded-[30px] text-[15px] p-2 hover:bg-green-700 text-white flex justify-center items-center gap-2"
+        className="bg-green-500 rounded-full text-sm w-[10rem] h-[2rem] hover:bg-green-700 text-white flex justify-center items-center gap-2"
         type="button"
       >
         <FontAwesomeIcon icon={faPlus} />
@@ -207,6 +200,4 @@ const ButtonAddService: React.FC<ButtonAddServiceProps> = ({ onAddService }) => 
       </button>
     </>
   );
-};
-
-export default ButtonAddService;
+}

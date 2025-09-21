@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import '@/styles/managerHome.scss';
-import ButtonAddImg from '@/components/btnAddImg';
+import ButtonAddImg from '@/components/btnAddImgHome';
 import { API_DeleteImage } from '@/api/API_deleteImgHome';
 import Cookies from 'js-cookie';
 
