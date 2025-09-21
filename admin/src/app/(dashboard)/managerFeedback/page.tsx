@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import Cookies from 'js-cookie';
+import Toast from 'typescript-toastify';
 import '@/styles/managerFeedback.scss';
 import { API_GetFeedbacks, API_DeleteFeedback } from '@/api/API_mngFeedback';
 
@@ -38,7 +39,7 @@ const ManagerFeedback: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleDelete = (email: string) => {
+  const handleDelete = (id: number) => {
     const token = Cookies.get('token');
     if (!token) return;
 
@@ -53,22 +54,31 @@ const ManagerFeedback: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await API_DeleteFeedback(email, token);
-          setData(prevData => prevData.filter(item => item.email !== email));
-
-          Swal.fire({
-            title: 'Đã xóa!',
-            text: 'Feedback đã được xóa thành công.',
-            icon: 'success',
-            timer: 2000,
+          await API_DeleteFeedback(id, token);
+          setData(prevData => prevData.filter(item => item.id !== id));
+          new Toast({
+            position: "top-right",
+            toastMsg: "Feedback đã được xóa thành công.",
+            autoCloseTime: 1500,
+            canClose: true,
+            showProgress: true,
+            pauseOnHover: true,
+            pauseOnFocusLoss: true,
+            type: "success",
+            theme: "light",
           });
         } catch (error) {
           console.error('Lỗi khi xóa feedback:', error);
-          Swal.fire({
-            title: 'Lỗi!',
-            text: 'Có lỗi xảy ra khi xóa Feedback!',
-            icon: 'error',
-            timer: 2000,
+          new Toast({
+            position: "top-right",
+            toastMsg: "Có lỗi xảy ra khi xóa Feedback!",
+            autoCloseTime: 1500,
+            canClose: true,
+            showProgress: true,
+            pauseOnHover: true,
+            pauseOnFocusLoss: true,
+            type: "error",
+            theme: "light",
           });
         }
       }
@@ -94,15 +104,15 @@ const ManagerFeedback: React.FC = () => {
                 <td colSpan={4} className="text-center py-4">Chưa có đánh giá nào</td>
               </tr>
             ) : (
-              data.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-50">
+              data.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50">
                   <td className="border px-4 py-2">{item.email}</td>
                   <td className="border px-4 py-2 text-yellow-500">{item.ratingIndex}</td>
                   <td className="border px-4 py-2">{item.content}</td>
                   <td className="border px-4 py-2">
                     <button
                       type="button"
-                      onClick={() => handleDelete(item.email)}
+                      onClick={() => handleDelete(item.id)}
                       className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 px-4 py-2 duration-300 text-white bg-red-600 hover:bg-red-500"
                     >
                       Xóa

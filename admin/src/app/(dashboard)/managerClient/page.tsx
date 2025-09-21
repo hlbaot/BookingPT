@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import '@/styles/managerClient.scss';
+import Toast from 'typescript-toastify';
 import Swal from "sweetalert2";
 import Cookies from 'js-cookie';
 import {
@@ -71,19 +72,29 @@ const ManagerClient: React.FC = () => {
           await API_DeleteBooking(email, token);
           setData(prevData => prevData.filter(item => item.email !== email));
 
-          Swal.fire({
-            title: 'Đã xóa!',
-            text: 'Lịch đặt đã được xóa thành công.',
-            icon: 'success',
-            timer: 2000,
+          new Toast({
+            position: "top-right",
+            toastMsg: "Lịch đặt đã được xoá thành công.",
+            autoCloseTime: 1500,
+            canClose: true,
+            showProgress: true,
+            pauseOnHover: true,
+            pauseOnFocusLoss: true,
+            type: "success",
+            theme: "light",
           });
         } catch (error) {
           console.error('Lỗi khi xóa lịch đặt:', error);
-          Swal.fire({
-            title: 'Lỗi!',
-            text: 'Có lỗi xảy ra khi xóa lịch đặt!',
-            icon: 'error',
-            timer: 2000,
+          new Toast({
+            position: "top-right",
+            toastMsg: "Có lỗi xảy ra khi xoá lịch đặt.",
+            autoCloseTime: 1500,
+            canClose: true,
+            showProgress: true,
+            pauseOnHover: true,
+            pauseOnFocusLoss: true,
+            type: "error",
+            theme: "light",
           });
         }
       }

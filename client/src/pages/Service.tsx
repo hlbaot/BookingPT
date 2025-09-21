@@ -33,7 +33,6 @@ const Service: React.FC = () => {
         console.error("Lỗi khi lấy dữ liệu:", error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -61,32 +60,32 @@ const Service: React.FC = () => {
               <div className="flex flex-col md:flex-row w-full max-w-7xl mx-auto px-[4rem]">
                 {/* Left */}
                 <div className="left flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-1/2">
-                  {/* <div className="flex flex-col md:flex-row items-center gap-4">
-                    {item.images?.length > 1 && (
+                  <div className="flex flex-col md:flex-row items-center gap-4">
+                    {item.imageUrls?.length > 1 && (
                       <img
                         className="h-[230px] w-[160px] object-cover rounded-lg md:rounded-none hidden md:block"
-                        src={item.images[1]}
+                        src={item.imageUrls[1]}
                         alt={`Slide ${item.id}-2`}
                         data-aos="fade-up"
                       />
                     )}
-                    {item.images?.length > 0 && (
+                    {item.imageUrls?.length > 0 && (
                       <img
                         className="h-[350px] w-[250px] object-cover rounded-lg md:rounded-none"
-                        src={item.images[0]}
+                        src={item.imageUrls[0]}
                         alt={`Slide ${item.id}-1`}
                         data-aos="fade-down"
                       />
                     )}
-                    {item.images?.length > 2 && (
+                    {item.imageUrls?.length > 2 && (
                       <img
                         className="h-[230px] w-[160px] object-cover rounded-lg md:rounded-none hidden md:block"
-                        src={item.images[2]}
+                        src={item.imageUrls[2]}
                         alt={`Slide ${item.id}-3`}
                         data-aos="fade-up"
                       />
                     )}
-                  </div> */}
+                  </div>
                 </div>
 
                 {/* Right */}

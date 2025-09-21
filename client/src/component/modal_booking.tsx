@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Toast from 'typescript-toastify';
 import "../styles/Modal.scss";
 import { API_SubmitBooking } from "@/api/API_SubmitPackage";
 import Cookies from "js-cookie";
@@ -17,14 +18,14 @@ interface CustomModalProps {
 export default function CustomModal({ open, handleClose, serviceData }: CustomModalProps) {
   if (!serviceData) return null;
 
-  // const { name, description, price, images } = serviceData;
+  const { name, description, price, imageUrls } = serviceData;
   const [selectedImage, setSelectedImage] = useState<string>("");
 
-  // useEffect(() => {
-  //   if (serviceData) {
-  //     setSelectedImage(serviceData.images[0]);
-  //   }
-  // }, [serviceData]);
+  useEffect(() => {
+    if (serviceData) {
+      setSelectedImage(serviceData.imageUrls[0]);
+    }
+  }, [serviceData]);
 
   const validationSchema = Yup.object({
     date: Yup.string().required("Required"),
@@ -67,7 +68,7 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
               </div>
 
               <div className="thumbnail-container flex gap-4 flex-nowrap overflow-x-auto h-[30%]">
-                {/* {images.map((image, index) => (
+                {imageUrls.map((image, index) => (
                   <img
                     className={`w-[100px] h-[100px] rounded-md object-cover cursor-pointer transition-transform ${selectedImage === image ? "border-2 border-blue-500 scale-105" : ""
                       }`}
@@ -76,7 +77,7 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                     alt={`Thumbnail ${index}`}
                     onClick={() => setSelectedImage(image)}
                   />
-                ))} */}
+                ))}
               </div>
             </div>
 
@@ -94,18 +95,51 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                 onSubmit={async (values: FormBooking, { resetForm }) => {
                   const token = Cookies.get("token");
                   if (!token) {
-                    alert("Vui lòng đăng nhập để đặt lịch!");
+                    new Toast({
+                      position: "top-right",
+                      toastMsg: "Vui lòng đăng nhập để đặt lịch!",
+                      autoCloseTime: 1500,
+                      canClose: true,
+                      showProgress: true,
+                      pauseOnHover: true,
+                      pauseOnFocusLoss: true,
+                      type: "error",
+                      theme: "light",
+                    });
+                    // alert("Vui lòng đăng nhập để đặt lịch!");
                     return;
                   }
 
                   try {
                     if (!serviceData) return; // đảm bảo có dữ liệu
                     const res = await API_SubmitBooking(values, token, serviceData.id);
-                    alert("Gửi thông tin thành công!");
+                    new Toast({
+                      position: "top-right",
+                      toastMsg: "Gửi thông tin thành công!",
+                      autoCloseTime: 1500,
+                      canClose: true,
+                      showProgress: true,
+                      pauseOnHover: true,
+                      pauseOnFocusLoss: true,
+                      type: "success",
+                      theme: "light",
+                    });
+                    // alert("Gửi thông tin thành công!");
                     resetForm();
                     handleClose();
                   } catch {
-                    alert("Có lỗi xảy ra, vui lòng thử lại!");
+                    new Toast({
+                      position: "top-right",
+                      toastMsg: "Có lỗi xảy ra, vui lòng thử lại!",
+                      autoCloseTime: 1500,
+                      canClose: true,
+                      showProgress: true,
+                      pauseOnHover: true,
+                      pauseOnFocusLoss: true,
+                      type: "error",
+                      theme: "light",
+                    });
+                    // alert("Có lỗi xảy ra, vui lòng thử lại!");
                   }
                 }}
 

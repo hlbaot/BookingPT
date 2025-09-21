@@ -6,6 +6,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import Cookies from 'js-cookie';
+import Toast from 'typescript-toastify';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -66,22 +67,51 @@ export default function ButtonAddService({ onAddService }: { onAddService: (s: a
               try {
                 const token = Cookies.get('token');
                 if (!token) {
-                  Swal.fire("Lỗi", "Vui lòng đăng nhập lại!", "error");
-                  alert("Vui lòng đăng nhập lại!");
+                  new Toast({
+                    position: "top-right",
+                    toastMsg: "Vui lòng đăng nhập.",
+                    autoCloseTime: 1500,
+                    canClose: true,
+                    showProgress: true,
+                    pauseOnHover: true,
+                    pauseOnFocusLoss: true,
+                    type: "error",
+                    theme: "light",
+                  });
+                  // alert("Vui lòng đăng nhập lại!");
                   return;
                 }
 
                 const newService = await API_CreateService(values, token);
                 onAddService(newService);
-
-                Swal.fire("Thành công", "Gói đã được tạo!", "success");
-                alert("Gói đã được tạo!");
+                new Toast({
+                    position: "top-right",
+                    toastMsg: "Gói đã được tạo thành công.",
+                    autoCloseTime: 1500,
+                    canClose: true,
+                    showProgress: true,
+                    pauseOnHover: true,
+                    pauseOnFocusLoss: true,
+                    type: "success",
+                    theme: "light",
+                  });
+                // alert("Gói đã được tạo!");
                 resetForm();
                 handleClose();
               } catch (err) {
                 console.error(err);
-                Swal.fire("Lỗi", "Không thể tạo gói!", "error");
-                alert("Không thể tạo gói!");
+                new Toast({
+                    position: "top-right",
+                    toastMsg: "Không thể tạo gói.",
+                    autoCloseTime: 1500,
+                    canClose: true,
+                    showProgress: true,
+                    pauseOnHover: true,
+                    pauseOnFocusLoss: true,
+                    type: "error",
+                    theme: "light",
+                  });
+                // alert("Không thể tạo gói!");
               } finally {
                 setSubmitting(false);
               }

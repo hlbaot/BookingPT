@@ -25,7 +25,7 @@ const ButtonLogin = () => {
         <span>Login</span>
       </button>
 
-{mode && (
+      {mode && (
         <ModalOverlay onClick={() => setMode(null)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
             {mode === "signin" && <FormSignIn switchToSignUp={() => setMode("signup")} />}

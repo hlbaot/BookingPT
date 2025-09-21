@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start",
-  "lint": "eslint"
-}
-,
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -26,6 +25,7 @@
     "sass": "^1.91.0",
     "swal": "^0.1.0",
     "sweetalert2": "^11.22.5",
+    "typescript-toastify": "^1.0.4",
     "yup": "^1.7.0"
   },
   "devDependencies": {

@@ -4,6 +4,7 @@ import '@/styles/managerService.scss';
 import ButtonAddService from '@/components/btnAddService';
 import Swal from 'sweetalert2';
 import ModalPackage from '@/components/modalPackage';
+import Toast from 'typescript-toastify';
 import Cookies from 'js-cookie';
 import {
   API_GetPackages,
@@ -35,12 +36,12 @@ function ManagerService() {
         const response = await API_GetPackages(token);
 
         // Chuyển price từ string -> number
-        const packages = response.packages.map((pkg: ServicePackage) => ({
-          ...pkg,
-          price: parseFloat(String(pkg.price)),
-        }));
+        // const packages = response.packages.map((pkg: ServicePackage) => ({
+        //   ...pkg,
+        //   price: parseFloat(String(pkg.price)),
+        // }));
 
-        setData(packages);
+        setData(response);
       } catch (error) {
         console.error('Lỗi khi lấy danh sách dịch vụ:', error);
       }
@@ -67,19 +68,29 @@ function ManagerService() {
           await API_DeleteService(id, token);
           setData((prevData) => prevData.filter((item) => item.id !== id));
 
-          Swal.fire({
-            title: 'Đã xóa!',
-            text: 'Gói dịch vụ đã được xóa thành công.',
-            icon: 'success',
-            timer: 1500,
+          new Toast({
+            position: "top-right",
+            toastMsg: "Gói dịch vụ đã được xóa thành công.",
+            autoCloseTime: 1500,
+            canClose: true,
+            showProgress: true,
+            pauseOnHover: true,
+            pauseOnFocusLoss: true,
+            type: "success",
+            theme: "light",
           });
         } catch (error) {
           console.error('Lỗi khi xóa gói dịch vụ:', error);
-          Swal.fire({
-            title: 'Lỗi!',
-            text: 'Có lỗi xảy ra khi xóa gói dịch vụ!',
-            icon: 'error',
-            timer: 1500,
+          new Toast({
+            position: "top-right",
+            toastMsg: "Có lỗi xảy ra khi xoá gói dịch vụ",
+            autoCloseTime: 1500,
+            canClose: true,
+            showProgress: true,
+            pauseOnHover: true,
+            pauseOnFocusLoss: true,
+            type: "error",
+            theme: "light",
           });
         }
       }
@@ -110,7 +121,7 @@ function ManagerService() {
       if (editData.price !== undefined) payload.price = editData.price;
       if (editData.description !== undefined) payload.description = editData.description;
 
-      const response = await API_UpdateService(editData.id ,payload, token);
+      const response = await API_UpdateService(editData.id, payload, token);
 
       if (response) {
         const newData = [...data];
@@ -120,20 +131,31 @@ function ManagerService() {
           setData(newData);
         }
 
-        Swal.fire({
-          title: 'Lưu thành công!',
-          text: 'Gói dịch vụ đã được cập nhật.',
-          icon: 'success',
-          timer: 1500,
+        new Toast({
+          position: "top-right",
+          toastMsg: "Gói dịch vụ đã được cập nhật thành công.",
+          autoCloseTime: 1500,
+          canClose: true,
+          showProgress: true,
+          pauseOnHover: true,
+          pauseOnFocusLoss: true,
+          type: "success",
+          theme: "light",
         });
         setEditingIndex(null);
       }
     } catch (error) {
       console.error('Lỗi khi lưu gói dịch vụ:', error);
-      Swal.fire({
-        title: 'Lỗi!',
-        text: 'Không thể cập nhật gói dịch vụ. Vui lòng thử lại.',
-        icon: 'error',
+      new Toast({
+        position: "top-right",
+        toastMsg: "Gói dịch vụ không được cập nhật thành công.",
+        autoCloseTime: 1500,
+        canClose: true,
+        showProgress: true,
+        pauseOnHover: true,
+        pauseOnFocusLoss: true,
+        type: "error",
+        theme: "light",
       });
     }
   };

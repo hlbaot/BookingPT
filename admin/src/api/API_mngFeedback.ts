@@ -4,7 +4,7 @@ const API_BASE_URL = "http://192.168.192.189:8080";
 
 // Lấy danh sách feedback
 export async function API_GetFeedbacks(token: string): Promise<Feedback[]> {
-  const res = await axios.get(`${API_BASE_URL}/feedback`, {
+  const res = await axios.get(`${API_BASE_URL}/ratings`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
@@ -12,10 +12,10 @@ export async function API_GetFeedbacks(token: string): Promise<Feedback[]> {
 
 
 // Xóa feedback theo email
-export async function API_DeleteFeedback(email: string, token: string) {
+export async function API_DeleteFeedback(id: number, token: string) {
   const res = await axios.delete(`${API_BASE_URL}/feedback`, {
     headers: { Authorization: `Bearer ${token}` },
-    data: { email },
+    data: { id },
   });
   return res.data;
 }
