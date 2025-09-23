@@ -13,9 +13,11 @@ const dancing = Dancing_Script({
 export const metadata: Metadata = {
   title: "Booking Photo",
   icons: {
-    icon: "/logo.jpg",
+    icon: "/img/logo1.png",   
   },
 };
+
+
 
 export default function RootLayout({
   children,

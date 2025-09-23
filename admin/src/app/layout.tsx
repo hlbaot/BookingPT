@@ -10,8 +10,8 @@ const dancing = Dancing_Script({
 });
 
 export const metadata: Metadata = {
-  title: "Booking Photo",
-  applicationName: "Booking Photo",
+  title: "Booking Photo Admin",
+  applicationName: "Booking Photo Admin",
   icons: "/logo.jpg",
 };
 

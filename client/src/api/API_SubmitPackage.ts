@@ -1,14 +1,14 @@
 // api/API_SubmitPackage.ts
 import axios from "axios";
 export async function API_SubmitBooking(
-  values: FormBooking,
+  payload: FormBooking,
   token: string,
   packageId: number
 ) {
   try {
     const response = await axios.post<FormBooking>(
       `http://192.168.192.189:8080/formBookings/create?packageId=${packageId}`,
-      values,
+      payload,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     return response.data;

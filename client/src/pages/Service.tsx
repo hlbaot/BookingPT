@@ -65,7 +65,7 @@ const Service: React.FC = () => {
                       <img
                         className="h-[230px] w-[160px] object-cover rounded-lg md:rounded-none hidden md:block"
                         src={item.imageUrls[1]}
-                        alt={`Slide ${item.id}-2`}
+                        alt={`Slide ${item.imageUrls}-2`}
                         data-aos="fade-up"
                       />
                     )}

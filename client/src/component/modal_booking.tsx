@@ -59,10 +59,10 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                   alt="Main package"
                 />
                 <div className="package-info flex-1 text-center text-black">
-                  <h3 className="text-xl font-medium mb-1">{serviceData.name}</h3>
-                  <p className="text-black text-base mb-1">{serviceData.description}</p>
+                  <h3 className="text-xl font-medium mb-1">{name}</h3>
+                  <p className="text-black text-base mb-1">{description}</p>
                   <p className="text-black text-base">
-                    Giá từ <span className="text-black">{serviceData.price}</span> VNĐ
+                    Giá từ <span className="text-black">{price}</span> VNĐ
                   </p>
                 </div>
               </div>

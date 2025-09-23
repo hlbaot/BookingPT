@@ -6,8 +6,8 @@ import AOS from "aos";
 import { API_Home } from "@/api/API_Home";
 
 interface Image {
-  img: string;
-  id: string;
+  id: number,
+  images: string
 }
 
 const Home: React.FC = () => {
@@ -62,7 +62,7 @@ const Home: React.FC = () => {
               <div
                 key={item.id}
                 className="item"
-                style={{ backgroundImage: `url(${item.img})` }}
+                style={{ backgroundImage: `url(${item.images})` }}
               />
             ))}
           </div>
