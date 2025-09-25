@@ -1,10 +1,12 @@
 
 interface Booking {
+  formBookingId: number;
+  packageId: number;
   email: string;
-  dayBooking: string;
-  timeBooking: string;
-  typePackage: string;
+  bookTime: string;
   location: string;
-  price: number;
-  status?: string;
+  pricePackage: number;
+  packageName: string;
+  status?: boolean;
+  message?: string;    
 }

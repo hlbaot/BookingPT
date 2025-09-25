@@ -54,7 +54,7 @@ const ManagerClient: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleDelete = (email: string) => {
+  const handleDelete = (formBookingId: number) => {
     const token = Cookies.get('token');
     if (!token) return;
 
@@ -69,8 +69,8 @@ const ManagerClient: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await API_DeleteBooking(email, token);
-          setData(prevData => prevData.filter(item => item.email !== email));
+          await API_DeleteBooking(formBookingId, token);
+          setData(prevData => prevData.filter(item => item.formBookingId !== formBookingId));
 
           new Toast({
             position: "top-right",
@@ -109,7 +109,7 @@ const ManagerClient: React.FC = () => {
       await API_ApproveBooking(email, token);
       setData(prevData =>
         prevData.map(item =>
-          item.email === email ? { ...item, status: 'Đã duyệt' } : item
+          item.email === email ? { ...item, status: true } : item
         )
       );
 
@@ -155,7 +155,7 @@ const ManagerClient: React.FC = () => {
               onChange={(e) => {
                 const packageFilter = e.target.value;
                 if (packageFilter) {
-                  setFilteredData(data.filter(item => item.typePackage === packageFilter));
+                  setFilteredData(data.filter(item => item.packageName === packageFilter));
                 } else {
                   setFilteredData(data);
                 }
@@ -177,11 +177,11 @@ const ManagerClient: React.FC = () => {
         <thead>
           <tr className="bg-gray-100">
             <th className="border px-4 py-2 text-left">Email</th>
-            <th className="border px-4 py-2 text-left">Ngày</th>
-            <th className="border px-4 py-2 text-left">Giờ</th>
+            <th className="border px-4 py-2 text-left">Ngày & Giờ</th>
             <th className="border px-4 py-2 text-left">Gói</th>
             <th className="border px-4 py-2 text-left">Địa chỉ</th>
             <th className="border px-4 py-2 text-left">Giá</th>
+            <th className="border px-4 py-2 text-left">Ghi chú</th>
             <th className="border px-4 py-2 text-left">Trạng Thái</th>
             <th className="border px-4 py-2 text-left">Thao tác</th>
           </tr>
@@ -194,19 +194,19 @@ const ManagerClient: React.FC = () => {
               </td>
             </tr>
           ) : (
-            filteredData.map((item, index) => (
-              <tr key={index} className="hover:bg-gray-50">
+            filteredData.map((item) => (
+              <tr key={item.formBookingId} className="hover:bg-gray-50">
                 <td className="border px-4 py-2">{item.email}</td>
-                <td className="border px-4 py-2">{item.dayBooking}</td>
-                <td className="border px-4 py-2">{item.timeBooking}</td>
-                <td className="border px-4 py-2">{item.typePackage}</td>
+                <td className="border px-4 py-2">{item.bookTime}</td>
+                <td className="border px-4 py-2">{item.packageName}</td>
                 <td className="border px-4 py-2">{item.location}</td>
-                <td className="border px-4 py-2">{item.price} VNĐ</td>
+                <td className="border px-4 py-2">{item.pricePackage} VNĐ</td>
+                <td className="border px-4 py-2">{item.message}</td>
                 <td className="border px-4 py-2 text-center">
-                  {item.status === 'Đã duyệt' ? 'Đã duyệt' : 'Chưa duyệt'}
+                  {item.status === true ? 'Đã duyệt' : 'Chưa duyệt'}
                 </td>
                 <td className="border text-yellow-500 px-4 py-2 flex gap-2">
-                  {item.status !== 'Đã duyệt' && (
+                  {item.status !== true && (
                     <button
                       className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm"
                       onClick={() => handleApprove(item.email)}
@@ -216,7 +216,7 @@ const ManagerClient: React.FC = () => {
                   )}
                   <button
                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
-                    onClick={() => handleDelete(item.email)}
+                    onClick={() => handleDelete(item.formBookingId)}
                   >
                     Xóa
                   </button>

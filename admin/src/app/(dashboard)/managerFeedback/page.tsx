@@ -6,9 +6,41 @@ import Toast from 'typescript-toastify';
 import '@/styles/managerFeedback.scss';
 import { API_GetFeedbacks, API_DeleteFeedback } from '@/api/API_mngFeedback';
 
+const fakedb = [
+  {
+    "id": 1,
+    "email": "user1@example.com",
+    "ratingIndex": 5,
+    "content": "Dịch vụ rất tốt, tôi sẽ quay lại!"
+  },
+  {
+    "id": 2,
+    "email": "user2@example.com",
+    "ratingIndex": 4,
+    "content": "Nhân viên thân thiện, nhưng cần cải thiện tốc độ xử lý."
+  },
+  {
+    "id": 3,
+    "email": "user3@example.com",
+    "ratingIndex": 3,
+    "content": "Trải nghiệm ổn, không quá nổi bật."
+  },
+  {
+    "id": 4,
+    "email": "user4@example.com",
+    "ratingIndex": 2,
+    "content": "Chưa hài lòng, dịch vụ chậm."
+  },
+  {
+    "id": 5,
+    "email": "user5@example.com",
+    "ratingIndex": 1,
+    "content": "Rất tệ, tôi sẽ không sử dụng lại."
+  }
+]
 
 const ManagerFeedback: React.FC = () => {
-  const [data, setData] = useState<Feedback[]>([]);
+  const [data, setData] = useState<Feedback[]>(fakedb);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,17 +139,18 @@ const ManagerFeedback: React.FC = () => {
               data.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50">
                   <td className="border px-4 py-2">{item.email}</td>
-                  <td className="border px-4 py-2 text-yellow-500">{item.ratingIndex}</td>
+                  <td className="border px-4 py-2"><p className='text-amber-400'>{item.ratingIndex}</p></td>
                   <td className="border px-4 py-2">{item.content}</td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 text-center align-middle">
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id)}
-                      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 px-4 py-2 duration-300 text-white bg-red-600 hover:bg-red-500"
+                      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow w-[5rem] h-4 duration-300 text-white bg-red-600 hover:bg-red-500"
                     >
                       Xóa
                     </button>
                   </td>
+
                 </tr>
               ))
             )}

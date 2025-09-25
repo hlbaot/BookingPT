@@ -4,7 +4,7 @@ const API_BASE_URL = "http://192.168.192.189:8080";
 
 // Lấy danh sách bookings
 export async function API_GetBookings(token: string) {
-  const res = await axios.get(`${API_BASE_URL}/bookings`, {
+  const res = await axios.get(`${API_BASE_URL}/formBookings`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
@@ -18,11 +18,10 @@ export async function API_GetPackages(token: string) {
   return res.data;
 }
 
-// Xóa lịch booking theo email
-export async function API_DeleteBooking(email: string, token: string) {
-  const res = await axios.delete(`${API_BASE_URL}/bookings?email=${email}`, {
+// Xóa lịch booking theo id
+export async function API_DeleteBooking(formBookingId: number, token: string) {
+  const res = await axios.delete(`${API_BASE_URL}/bookings?email=${formBookingId}`, {
     headers: { Authorization: `Bearer ${token}` },
-    // data: { email },
   });
   return res.data;
 }
@@ -30,7 +29,7 @@ export async function API_DeleteBooking(email: string, token: string) {
 // Duyệt booking theo email
 export async function API_ApproveBooking(email: string, token: string) {
   const res = await axios.patch(`${API_BASE_URL}/bookings`,
-    { email, status: "Đã duyệt" },
+    { email, status: true },
     {
       headers: { Authorization: `Bearer ${token}` }
     }

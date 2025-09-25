@@ -28,17 +28,16 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
   }, [serviceData]);
 
   const validationSchema = Yup.object({
-    date: Yup.string().required("Required"),
-    time: Yup.string().required("Required"),
-    address: Yup.string().required("Required"),
-    note: Yup.string(),
+    bookTime: Yup.string().required("Required"),
+    location: Yup.string().required("Required"),
+    message: Yup.string(),
   });
 
   //get email từ cookies
   const email = Cookies.get("email");
 
   //lấy ngày hiện tại
-  const today = new Date().toISOString().split("T")[0]; // yyyy-MM-dd
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <section>
@@ -85,9 +84,7 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
             <div className="right w-[35%] h-full p-2">
               <Formik
                 initialValues={{
-                  email: email || "",
                   bookTime: "",
-                  time: "",
                   location: "",
                   message: "",
                 }}
@@ -124,7 +121,7 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                       type: "success",
                       theme: "light",
                     });
-                    // alert("Gửi thông tin thành công!");
+                    alert("Gửi thông tin thành công!");
                     resetForm();
                     handleClose();
                   } catch {
@@ -139,7 +136,7 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                       type: "error",
                       theme: "light",
                     });
-                    // alert("Có lỗi xảy ra, vui lòng thử lại!");
+                    alert("Có lỗi xảy ra, vui lòng thử lại!");
                   }
                 }}
 
@@ -154,7 +151,7 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                       <Field
                         name="email"
                         type="email"
-                        placeholder="Your email"
+                        placeholder={email}
                         style={{ pointerEvents: "none" }}
                         className="w-full p-2 border border-gray-300 rounded-md text-black text-sm bg-gray-100"
                         readOnly
@@ -165,43 +162,35 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                   {/* Date & Time */}
                   <div className="form-row flex gap-2 flex-wrap">
                     <div className="form-field flex-1 min-w-[150px]">
-                      <label className="block text-sm mb-1 text-black">Date</label>
+                      <label className="block text-sm mb-1 text-black">Date & Time</label>
                       <Field
-                        name="date"
-                        type="date"
+                        name="bookTime"
+                        type="datetime-local"
                         min={today}
                         className="w-full p-2 border border-gray-300 rounded-md text-black text-sm"
                       />
-                      <ErrorMessage name="date" component="div" className="text-red-500 text-xs mt-1" />
-                    </div>
-                    <div className="form-field flex-1 min-w-[150px]">
-                      <label className="block text-sm mb-1 text-black">Time</label>
-                      <Field
-                        name="time"
-                        type="time"
-                        className="w-full p-2 border border-gray-300 rounded-md text-black text-sm"
-                      />
-                      <ErrorMessage name="time" component="div" className="text-red-500 text-xs mt-1" />
+                      <ErrorMessage name="bookTime" component="div" className="text-red-500 text-xs mt-1" />
                     </div>
                   </div>
+
 
                   {/* Address */}
                   <div className="form-field">
                     <label className="block text-sm mb-1 text-black">Address</label>
                     <Field
-                      name="address"
+                      name="location"
                       type="text"
-                      placeholder="Enter your address"
+                      placeholder="Enter your location"
                       className="w-full p-2 border border-gray-300 rounded-md text-black text-sm"
                     />
-                    <ErrorMessage name="address" component="div" className="text-red-500 text-xs mt-1" />
+                    <ErrorMessage name="location" component="div" className="text-red-500 text-xs mt-1" />
                   </div>
 
                   {/* Note */}
                   <div className="form-field">
                     <label className="block text-sm mb-1 text-black">Note</label>
                     <Field
-                      name="note"
+                      name="message"
                       as="textarea"
                       placeholder="Enter additional notes"
                       className="w-full p-2 border border-gray-300 rounded-md text-black text-sm"

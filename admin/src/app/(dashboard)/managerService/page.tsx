@@ -35,12 +35,6 @@ function ManagerService() {
         if (!token) return;
         const response = await API_GetPackages(token);
 
-        // Chuyển price từ string -> number
-        // const packages = response.packages.map((pkg: ServicePackage) => ({
-        //   ...pkg,
-        //   price: parseFloat(String(pkg.price)),
-        // }));
-
         setData(response);
       } catch (error) {
         console.error('Lỗi khi lấy danh sách dịch vụ:', error);
