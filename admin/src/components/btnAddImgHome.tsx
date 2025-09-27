@@ -1,8 +1,7 @@
 'use client';
 import { useRef } from 'react';
 import axios from 'axios';
-import Swal from "sweetalert2";
-import Toast from 'typescript-toastify';
+import { toast } from "react-toastify";
 import { CLOUDINARY_UPLOAD_URL, CLOUDINARY_UPLOAD_PRESET } from '@/api/API_cloudinary';
 
 interface ButtonAddProps {
@@ -24,37 +23,20 @@ const ButtonAddImg: React.FC<ButtonAddProps> = ({ onImageUpload }) => {
     try {
       const response = await axios.post(CLOUDINARY_UPLOAD_URL, formData);
       if (response) {
-        // console.log('Upload thành công', response.data);
-
-        new Toast({
-          position: "top-right",
-          toastMsg: "Upload ảnh thành công.",
-          autoCloseTime: 1500,
-          canClose: true,
-          showProgress: true,
-          pauseOnHover: true,
-          pauseOnFocusLoss: true,
-          type: "success",
-          theme: "light",
-        });
+        toast.success("Upload ảnh thành công!", {
+          autoClose: 1500,});  
       }
-      else console.error('Upload thất bại', response);
-
-
+      else {
+        console.error('Upload thất bại', response);
+        toast.error("Upload ảnh thất bại!", {
+          autoClose: 1500,});  
+      }
 
     } catch (error) {
       console.error('Upload thất bại', error);
-      new Toast({
-          position: "top-right",
-          toastMsg: "Upload ảnh thất bại.",
-          autoCloseTime: 1500,
-          canClose: true,
-          showProgress: true,
-          pauseOnHover: true,
-          pauseOnFocusLoss: true,
-          type: "error",
-          theme: "light",
-        });
+      toast.error("Upload ảnh thất bại!", {
+        autoClose: 1500,});  
+      return;
     }
   };
 

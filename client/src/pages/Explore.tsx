@@ -3,9 +3,7 @@ import { useEffect, useState } from 'react';
 import '../styles/Explore.scss';
 import styled from 'styled-components';
 
-type ExploreProps = {};
-
-const Explore: React.FC<ExploreProps> = () => {
+const Explore: React.FC= () => {
   const images: string[] = [
     'https://i.pinimg.com/736x/fb/9d/1f/fb9d1f797ac3ffbda0e7e2537f7c9a6e.jpg',
     'https://i.pinimg.com/736x/5f/98/35/5f9835dd694de0b91d6f8c35bd236abe.jpg',

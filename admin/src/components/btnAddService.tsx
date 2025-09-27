@@ -6,7 +6,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import Cookies from 'js-cookie';
-import Toast from 'typescript-toastify';
+import { toast } from "react-toastify";
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -67,50 +67,23 @@ export default function ButtonAddService({ onAddService }: { onAddService: (s: a
               try {
                 const token = Cookies.get('token');
                 if (!token) {
-                  new Toast({
-                    position: "top-right",
-                    toastMsg: "Vui lòng đăng nhập.",
-                    autoCloseTime: 1500,
-                    canClose: true,
-                    showProgress: true,
-                    pauseOnHover: true,
-                    pauseOnFocusLoss: true,
-                    type: "error",
-                    theme: "light",
-                  });
+                  toast.error("Vui lòng đăng nhập lại!", {
+                    autoClose: 1500,});
                   // alert("Vui lòng đăng nhập lại!");
                   return;
                 }
 
                 const newService = await API_CreateService(values, token);
                 onAddService(newService);
-                new Toast({
-                    position: "top-right",
-                    toastMsg: "Gói đã được tạo thành công.",
-                    autoCloseTime: 1500,
-                    canClose: true,
-                    showProgress: true,
-                    pauseOnHover: true,
-                    pauseOnFocusLoss: true,
-                    type: "success",
-                    theme: "light",
-                  });
+                toast.success("Gói đã được tạo!", {
+                  autoClose: 1500,});
                 // alert("Gói đã được tạo!");
                 resetForm();
                 handleClose();
               } catch (err) {
                 console.error(err);
-                new Toast({
-                    position: "top-right",
-                    toastMsg: "Không thể tạo gói.",
-                    autoCloseTime: 1500,
-                    canClose: true,
-                    showProgress: true,
-                    pauseOnHover: true,
-                    pauseOnFocusLoss: true,
-                    type: "error",
-                    theme: "light",
-                  });
+                toast.error("Không thể tạo gói!", {
+                  autoClose: 1500,});
                 // alert("Không thể tạo gói!");
               } finally {
                 setSubmitting(false);

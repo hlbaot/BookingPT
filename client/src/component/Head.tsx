@@ -56,7 +56,7 @@ export default function Head() {
 
     return (
         <motion.header
-            className="head w-full h-auto fixed top-0 left-0 right-0 bg-black bg-opacity-50 flex justify-around items-center"
+            className="head w-full h-auto fixed top-0 left-0 right-0 bg-opacity-50 flex justify-around items-center"
             data-aos="fade-down"
             initial={{ y: 0 }}
             animate={{ y: isVisible ? 0 : '-100%' }}

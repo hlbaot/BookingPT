@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import '@/styles/managerClient.scss';
-import Toast from 'typescript-toastify';
+import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Cookies from 'js-cookie';
 import {
@@ -11,8 +11,67 @@ import {
   API_ApproveBooking
 } from '@/api/API_mngClient';
 
+const fakedb =
+  [
+    {
+      formBookingId: 1,
+      packageId: 101,
+      email: "nguyen.an@example.com",
+      bookTime: "2025-10-01T09:30:00",
+      location: "Studio A - Đà Nẵng",
+      pricePackage: 1500000,
+      packageName: "Gói Chụp Ngoại Cảnh",
+      status: true,
+      message: "Muốn chụp buổi sáng sớm.",
+    },
+    {
+      formBookingId: 2,
+      packageId: 102,
+      email: "tran.binh@example.com",
+      bookTime: "2025-10-02T14:00:00",
+      location: "Công viên 29/3, Đà Nẵng",
+      pricePackage: 2000000,
+      packageName: "Gói Chụp Studio",
+      status: false,
+      message: "Mang thêm phông nền trắng.",
+    },
+    {
+      formBookingId: 3,
+      packageId: 103,
+      email: "le.hoa@example.com",
+      bookTime: "2025-10-03T16:00:00",
+      location: "Biển Mỹ Khê",
+      pricePackage: 2500000,
+      packageName: "Gói Chụp Gia Đình",
+      status: true,
+      message: "Chụp gia đình 5 người.",
+    },
+    {
+      formBookingId: 4,
+      packageId: 104,
+      email: "pham.khanh@example.com",
+      bookTime: "2025-10-05T10:00:00",
+      location: "Trường Đại học Bách Khoa",
+      pricePackage: 5000000,
+      packageName: "Gói Chụp Kỷ Yếu",
+      status: false,
+      message: "Chụp cho lớp 20 người.",
+    },
+    {
+      formBookingId: 5,
+      packageId: 105,
+      email: "doan.mai@example.com",
+      bookTime: "2025-10-07T08:00:00",
+      location: "Hội An",
+      pricePackage: 10000000,
+      packageName: "Gói Chụp Cưới",
+      status: true,
+      message: "Chụp cả trong phố cổ và biển.",
+    },
+  ];
+
 const ManagerClient: React.FC = () => {
-  const [data, setData] = useState<Booking[]>([]);
+  const [data, setData] = useState<Booking[]>(fakedb);
   const [filteredData, setFilteredData] = useState<Booking[]>([]);
   const [packages, setPackages] = useState<ServicePackage[]>([]);
 
@@ -25,12 +84,6 @@ const ManagerClient: React.FC = () => {
       try {
         const token = Cookies.get('token');
         if (!token) {
-          Swal.fire({
-            title: 'Lỗi!',
-            text: 'Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
           return;
         }
 
@@ -41,12 +94,8 @@ const ManagerClient: React.FC = () => {
         setPackages(pkgs);
       } catch (error) {
         console.error('Lỗi khi lấy dữ liệu:', error);
-        Swal.fire({
-          title: 'Lỗi!',
-          text: 'Có lỗi xảy ra khi lấy dữ liệu!',
-          icon: 'error',
-          timer: 2000,
-          confirmButtonText: 'OK'
+        toast.error("Lỗi khi lấy dữ liệu!", {
+          autoClose: 1500,
         });
       }
     };
@@ -72,29 +121,13 @@ const ManagerClient: React.FC = () => {
           await API_DeleteBooking(formBookingId, token);
           setData(prevData => prevData.filter(item => item.formBookingId !== formBookingId));
 
-          new Toast({
-            position: "top-right",
-            toastMsg: "Lịch đặt đã được xoá thành công.",
-            autoCloseTime: 1500,
-            canClose: true,
-            showProgress: true,
-            pauseOnHover: true,
-            pauseOnFocusLoss: true,
-            type: "success",
-            theme: "light",
+          toast.success("Xóa lịch đặt thành công!", {
+            autoClose: 1500,
           });
         } catch (error) {
           console.error('Lỗi khi xóa lịch đặt:', error);
-          new Toast({
-            position: "top-right",
-            toastMsg: "Có lỗi xảy ra khi xoá lịch đặt.",
-            autoCloseTime: 1500,
-            canClose: true,
-            showProgress: true,
-            pauseOnHover: true,
-            pauseOnFocusLoss: true,
-            type: "error",
-            theme: "light",
+          toast.error("Xóa lịch đặt thất bại!", {
+            autoClose: 1500,
           });
         }
       }
@@ -112,20 +145,13 @@ const ManagerClient: React.FC = () => {
           item.email === email ? { ...item, status: true } : item
         )
       );
-
-      Swal.fire({
-        title: 'Đã duyệt!',
-        text: 'Lịch đặt đã được duyệt.',
-        icon: 'success',
-        timer: 2000,
+      toast.success("Duyệt lịch đặt thành công!", {
+        autoClose: 1500,
       });
     } catch (error) {
       console.error('Lỗi khi duyệt lịch đặt:', error);
-      Swal.fire({
-        title: 'Lỗi!',
-        text: 'Có lỗi xảy ra khi duyệt lịch đặt!',
-        icon: 'error',
-        timer: 2000,
+      toast.error("Duyệt lịch đặt thất bại!", {
+        autoClose: 1500,
       });
     }
   }
@@ -135,7 +161,7 @@ const ManagerClient: React.FC = () => {
       <h1 className='w-full bg-white z-10 text-2xl font-bold text-center py-2 sticky top-0'>Đặt lịch</h1>
 
       {/* Tìm kiếm và bộ lọc */}
-      <div className="w-full p-4 flex gap-4 items-center justify-between">
+      <div className="search w-full mb-4 flex gap-4 items-center justify-between">
         <div className="flex items-center gap-2">
           <input
             className="w-[300px] rounded-xl h-12 px-4 border border-gray-300 focus:outline-none"
@@ -173,7 +199,7 @@ const ManagerClient: React.FC = () => {
       </div>
 
       {/* Bảng danh sách */}
-      <table className="table-auto w-full border-collapse border border-gray-300 mt-4">
+      <table className="tb table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-100">
             <th className="border px-4 py-2 text-left">Email</th>
@@ -202,24 +228,29 @@ const ManagerClient: React.FC = () => {
                 <td className="border px-4 py-2">{item.location}</td>
                 <td className="border px-4 py-2">{item.pricePackage} VNĐ</td>
                 <td className="border px-4 py-2">{item.message}</td>
-                <td className="border px-4 py-2 text-center">
-                  {item.status === true ? 'Đã duyệt' : 'Chưa duyệt'}
+                <td className="border text-center">
+                  {item.status === true ?
+                    <p className='text-green-500'>Đã duyệt</p> :
+                    <p className='text-red-500'>Chưa duyệt</p>}
                 </td>
-                <td className="border text-yellow-500 px-4 py-2 flex gap-2">
-                  {item.status !== true && (
+                <td className='border'>
+                  <div className='ml-1 flex gap-2'>
+                    {item.status !== true && (
+                      <button
+                        className="inline-flex hover:cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0 shadow w-[4rem] h-4 duration-300 text-white bg-green-500 hover:bg-green-600"
+                        onClick={() => handleApprove(item.email)}
+                      >
+                        Duyệt
+                      </button>
+                    )}
                     <button
-                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm"
-                      onClick={() => handleApprove(item.email)}
+                      className="inline-flex hover:cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0 shadow w-[4rem] h-4 duration-300 text-white bg-red-500 hover:bg-red-600"
+                      onClick={() => handleDelete(item.formBookingId)}
                     >
-                      Duyệt
+                      Xóa
                     </button>
-                  )}
-                  <button
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
-                    onClick={() => handleDelete(item.formBookingId)}
-                  >
-                    Xóa
-                  </button>
+                  </div>
+
                 </td>
               </tr>
             ))

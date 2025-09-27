@@ -2,9 +2,10 @@
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import { Package } from "../interfaces/package";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import Toast from 'typescript-toastify';
+import { toast } from "react-toastify";
 import "../styles/Modal.scss";
 import { API_SubmitBooking } from "@/api/API_SubmitPackage";
 import Cookies from "js-cookie";
@@ -92,51 +93,24 @@ export default function CustomModal({ open, handleClose, serviceData }: CustomMo
                 onSubmit={async (values: FormBooking, { resetForm }) => {
                   const token = Cookies.get("token");
                   if (!token) {
-                    new Toast({
-                      position: "top-right",
-                      toastMsg: "Vui lòng đăng nhập để đặt lịch!",
-                      autoCloseTime: 1500,
-                      canClose: true,
-                      showProgress: true,
-                      pauseOnHover: true,
-                      pauseOnFocusLoss: true,
-                      type: "error",
-                      theme: "light",
-                    });
-                    // alert("Vui lòng đăng nhập để đặt lịch!");
+                    toast.error("Bạn cần đăng nhập để thực hiện chức năng này!", {
+                      autoClose: 1500,
+                    } )
                     return;
                   }
 
                   try {
                     if (!serviceData) return; // đảm bảo có dữ liệu
-                    const res = await API_SubmitBooking(values, token, serviceData.id);
-                    new Toast({
-                      position: "top-right",
-                      toastMsg: "Gửi thông tin thành công!",
-                      autoCloseTime: 1500,
-                      canClose: true,
-                      showProgress: true,
-                      pauseOnHover: true,
-                      pauseOnFocusLoss: true,
-                      type: "success",
-                      theme: "light",
+                    await API_SubmitBooking(values, token, serviceData.id);
+                    toast.success("Bạn đã đặt lịch thành công!", {
+                      autoClose: 1500,
                     });
-                    alert("Gửi thông tin thành công!");
                     resetForm();
                     handleClose();
                   } catch {
-                    new Toast({
-                      position: "top-right",
-                      toastMsg: "Có lỗi xảy ra, vui lòng thử lại!",
-                      autoCloseTime: 1500,
-                      canClose: true,
-                      showProgress: true,
-                      pauseOnHover: true,
-                      pauseOnFocusLoss: true,
-                      type: "error",
-                      theme: "light",
+                    toast.error("Đã có lỗi xảy ra, vui lòng thử lại!", {
+                      autoClose: 1500,
                     });
-                    alert("Có lỗi xảy ra, vui lòng thử lại!");
                   }
                 }}
 

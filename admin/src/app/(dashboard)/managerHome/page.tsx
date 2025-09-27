@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { toast } from "react-toastify";
 import '@/styles/managerHome.scss';
 import ButtonAddImg from '@/components/btnAddImgHome';
 import { API_DeleteImage } from '@/api/API_deleteImgHome';
@@ -21,13 +22,8 @@ const ManagerHome: React.FC = () => {
     setImages(updatedImages);
 
     localStorage.setItem('images', JSON.stringify(updatedImages));
-    Swal.fire({
-      title: 'Tải ảnh thành công!',
-      icon: 'success',
-      confirmButtonText: 'OK',
-      timer: 2000,
-      draggable: true,
-    });
+    toast.success("Thêm ảnh thành công!", {
+      autoClose: 1500,});
   };
 
   const handleDelete = async (public_id: string) => {
@@ -51,17 +47,12 @@ const ManagerHome: React.FC = () => {
         setImages(updatedImages);
         localStorage.setItem('images', JSON.stringify(updatedImages));
 
-        Swal.fire({
-          title: 'Xóa ảnh thành công!',
-          icon: 'success',
-          timer: 2000,
-        });
+        toast.success("Xóa ảnh thành công!", {
+          autoClose: 1500,});
       } catch (error) {
-        Swal.fire({
-          title: 'Xóa ảnh thất bại!',
-          icon: 'error',
-          timer: 2000,
-        });
+        toast.error("Xóa ảnh thất bại!", {
+          autoClose: 1500,});
+        console.error('Lỗi khi xóa ảnh:', error);
       }
     }
   };

@@ -4,7 +4,7 @@ import '@/styles/managerService.scss';
 import ButtonAddService from '@/components/btnAddService';
 import Swal from 'sweetalert2';
 import ModalPackage from '@/components/modalPackage';
-import Toast from 'typescript-toastify';
+import { toast } from "react-toastify";
 import Cookies from 'js-cookie';
 import {
   API_GetPackages,
@@ -12,9 +12,41 @@ import {
   API_UpdateService
 } from '@/api/API_mngService';
 
+const fakedb = [
+  {
+    "id": 1,
+    "name": "Gói chụp cơ bản",
+    "price": 1000000,
+    "description": "Gói chụp cơ bản bao gồm 1 giờ chụp tại studio và 10 ảnh chỉnh sửa.",
+    "imageUrls": [
+      "https://example.com/image1.jpg",
+      "https://example.com/image2.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Gói chụp nâng cao",
+    "price": 2000000,
+    "description": "Gói chụp nâng cao bao gồm 2 giờ chụp tại studio, 20 ảnh chỉnh sửa và in 5 ảnh khổ lớn.",
+    "imageUrls": [
+      "https://example.com/image3.jpg",
+      "https://example.com/image4.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Gói chụp cao cấp",
+    "price": 3000000,
+    "description": "Gói chụp cao cấp bao gồm 3 giờ chụp tại studio và ngoài trời, 30 ảnh chỉnh sửa, in 10 ảnh khổ lớn và album ảnh.",
+    "imageUrls": [
+      "https://example.com/image5.jpg",
+      "https://example.com/image6.jpg"
+    ]
+  }
+]
 
 function ManagerService() {
-  const [data, setData] = useState<ServicePackage[]>([]);
+  const [data, setData] = useState<ServicePackage[]>(fakedb);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editData, setEditData] = useState<ServicePackage>({
     id: 0,
@@ -62,29 +94,13 @@ function ManagerService() {
           await API_DeleteService(id, token);
           setData((prevData) => prevData.filter((item) => item.id !== id));
 
-          new Toast({
-            position: "top-right",
-            toastMsg: "Gói dịch vụ đã được xóa thành công.",
-            autoCloseTime: 1500,
-            canClose: true,
-            showProgress: true,
-            pauseOnHover: true,
-            pauseOnFocusLoss: true,
-            type: "success",
-            theme: "light",
+          toast.success("Xóa gói dịch vụ thành công!", {
+            autoClose: 1500,
           });
         } catch (error) {
           console.error('Lỗi khi xóa gói dịch vụ:', error);
-          new Toast({
-            position: "top-right",
-            toastMsg: "Có lỗi xảy ra khi xoá gói dịch vụ",
-            autoCloseTime: 1500,
-            canClose: true,
-            showProgress: true,
-            pauseOnHover: true,
-            pauseOnFocusLoss: true,
-            type: "error",
-            theme: "light",
+          toast.error("Xóa gói dịch vụ thất bại!", {
+            autoClose: 1500,
           });
         }
       }
@@ -125,32 +141,17 @@ function ManagerService() {
           setData(newData);
         }
 
-        new Toast({
-          position: "top-right",
-          toastMsg: "Gói dịch vụ đã được cập nhật thành công.",
-          autoCloseTime: 1500,
-          canClose: true,
-          showProgress: true,
-          pauseOnHover: true,
-          pauseOnFocusLoss: true,
-          type: "success",
-          theme: "light",
+        toast.success("Gói dịch vụ được cập nhật thành công!", {
+          autoClose: 1500,
         });
         setEditingIndex(null);
       }
     } catch (error) {
       console.error('Lỗi khi lưu gói dịch vụ:', error);
-      new Toast({
-        position: "top-right",
-        toastMsg: "Gói dịch vụ không được cập nhật thành công.",
-        autoCloseTime: 1500,
-        canClose: true,
-        showProgress: true,
-        pauseOnHover: true,
-        pauseOnFocusLoss: true,
-        type: "error",
-        theme: "light",
+      toast.error("Cập nhật gói dịch vụ thất bại!", {
+        autoClose: 1500,
       });
+      return;
     }
   };
 
@@ -236,13 +237,13 @@ function ManagerService() {
                         <>
                           <button
                             onClick={handleSave}
-                            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm"
+                            className="inline-flex hover:cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0 shadow w-[4rem] h-4 duration-300 text-white bg-green-500 hover:bg-green-600"
                           >
                             Lưu
                           </button>
                           <button
                             onClick={() => setEditingIndex(null)}
-                            className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm"
+                            className="inline-flex hover:cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0 shadow w-[4rem] h-4 duration-300 text-white bg-gray-500 hover:bg-gray-600"
                           >
                             Hủy
                           </button>
@@ -251,22 +252,25 @@ function ManagerService() {
                         <>
                           <button
                             onClick={() => handleOpenModal(item)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+                            className="inline-flex hover:cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0 shadow w-[4rem] h-4 duration-300 text-white bg-blue-500 hover:bg-blue-600"
                           >
                             Xem
                           </button>
+
                           <button
                             onClick={() => handleChange(item.id)}
-                            className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm"
+                            className="inline-flex hover:cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0 shadow w-[4rem] h-4 duration-300 text-white bg-yellow-500 hover:bg-yellow-600"
                           >
                             Sửa
                           </button>
+
                           <button
                             onClick={() => handleDelete(item.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
+                            className="inline-flex hover:cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0 shadow w-[4rem] h-4 duration-300 text-white bg-red-600 hover:bg-red-600"
                           >
                             Xóa
                           </button>
+
                         </>
                       )}
                     </div>

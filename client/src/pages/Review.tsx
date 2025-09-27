@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Cookies from "js-cookie";
-import Toast from 'typescript-toastify';
+import { toast } from "react-toastify";
 import "../styles/Review.scss";
 import { API_SubmitFeedBack } from "../api/API_Feedback";
 
@@ -38,30 +38,14 @@ const Review: React.FC = () => {
                   },
                   token
                 );
-                new Toast({
-                  position: "top-right",
-                  toastMsg: "Cảm ơn bạn đã gửi đánh giá!",
-                  autoCloseTime: 1500,
-                  canClose: true,
-                  showProgress: true,
-                  pauseOnHover: true,
-                  pauseOnFocusLoss: true,
-                  type: "success",
-                  theme: "light",
+                toast.success("Cảm ơn bạn đã gửi feedback!", {
+                  autoClose: 1500,
                 });
                 resetForm();
                 setRating(0);
-              } catch (error) {
-                new Toast({
-                  position: "top-right",
-                  toastMsg: "Có lỗi xảy ra khi gửi đánh giá!",
-                  autoCloseTime: 1500,
-                  canClose: true,
-                  showProgress: true,
-                  pauseOnHover: true,
-                  pauseOnFocusLoss: true,
-                  type: "error",
-                  theme: "light",
+              } catch  {
+                toast.error("Gửi feedback thất bại. Vui lòng thử lại sau.", {
+                  autoClose: 1500,
                 });
               }
             }}

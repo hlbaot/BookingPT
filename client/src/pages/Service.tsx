@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import CustomModal from "../component/modal_booking";
 import { API_Service } from "@/api/API_Service";
+import { Package } from "../interfaces/package";
 
 const Service: React.FC = () => {
   const [open, setOpen] = useState(false);

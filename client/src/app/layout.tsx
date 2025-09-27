@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Dancing_Script } from "next/font/google";
 import "aos/dist/aos.css";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import "../styles/globals.css";
 
 // Config Google Font
@@ -30,6 +32,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         {children}
+        <ToastContainer position="top-right"/>
       </body>
     </html>
   );

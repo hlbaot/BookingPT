@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Dancing_Script } from "next/font/google";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import "aos/dist/aos.css";
 import "@/styles/globals.css";
 
@@ -12,7 +14,7 @@ const dancing = Dancing_Script({
 export const metadata: Metadata = {
   title: "Booking Photo Admin",
   applicationName: "Booking Photo Admin",
-  icons: "/logo.jpg",
+  icons: "/logo.png",
 };
 
 export default function RootLayout({
@@ -22,7 +24,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={dancing.variable}>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <ToastContainer position="top-right" />
+      </body>
     </html>
   );
 }
