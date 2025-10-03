@@ -134,15 +134,15 @@ const ManagerClient: React.FC = () => {
     });
   }
 
-  const handleApprove = async (email: string) => {
+  const handleApprove = async (formBookingId: number) => {
     const token = Cookies.get('token');
     if (!token) return;
 
     try {
-      await API_ApproveBooking(email, token);
+      await API_ApproveBooking(formBookingId, token);
       setData(prevData =>
         prevData.map(item =>
-          item.email === email ? { ...item, status: true } : item
+          item.formBookingId === formBookingId ? { ...item, status: true } : item
         )
       );
       toast.success("Duyệt lịch đặt thành công!", {
@@ -238,7 +238,7 @@ const ManagerClient: React.FC = () => {
                     {item.status !== true && (
                       <button
                         className="inline-flex hover:cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0 shadow w-[4rem] h-4 duration-300 text-white bg-green-500 hover:bg-green-600"
-                        onClick={() => handleApprove(item.email)}
+                        onClick={() => handleApprove(item.formBookingId)}
                       >
                         Duyệt
                       </button>

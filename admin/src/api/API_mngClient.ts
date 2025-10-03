@@ -20,16 +20,16 @@ export async function API_GetPackages(token: string) {
 
 // Xóa lịch booking theo id
 export async function API_DeleteBooking(formBookingId: number, token: string) {
-  const res = await axios.delete(`${API_BASE_URL}/bookings?email=${formBookingId}`, {
+  const res = await axios.delete(`${API_BASE_URL}/formBookings/delete?formBookingId=${formBookingId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
 }
 
-// Duyệt booking theo email
-export async function API_ApproveBooking(email: string, token: string) {
-  const res = await axios.patch(`${API_BASE_URL}/bookings`,
-    { email, status: true },
+// Duyệt booking theo id
+export async function API_ApproveBooking(formBookingId: number, token: string) {
+  const res = await axios.put(`${API_BASE_URL}/formBookings/approve?formBookingId=${formBookingId}`,
+    { formBookingId, status: true },
     {
       headers: { Authorization: `Bearer ${token}` }
     }

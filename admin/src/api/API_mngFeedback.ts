@@ -11,9 +11,9 @@ export async function API_GetFeedbacks(token: string): Promise<Feedback[]> {
 }
 
 
-// Xóa feedback theo email
+// Xóa feedback theo id
 export async function API_DeleteFeedback(id: number, token: string) {
-  const res = await axios.delete(`${API_BASE_URL}/feedback`, {
+  const res = await axios.delete(`${API_BASE_URL}/ratings/delete?ratingId=${id}`, {
     headers: { Authorization: `Bearer ${token}` },
     data: { id },
   });
