@@ -16,7 +16,7 @@ const FormSignUp: React.FC<Props> = ({ switchToSignIn }) => {
   const [passwordTemp, setPasswordTemp] = useState("");
   const [message, setMessage] = useState("");
 
-  const formik = useFormik<SignUpRequest>({
+  const formik = useFormik<SignUpForm>({
     initialValues: { email: '', password: '', confirmPassword: '' },
     validationSchema: Yup.object({
       email: Yup.string().email('Email không hợp lệ').required('Bắt buộc nhập'),

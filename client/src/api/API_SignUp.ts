@@ -10,11 +10,10 @@ export const API_SendOTP = async (email: string) => {
 
 
 // xác minh OTP
-export const API_SignUp = async (email: string, password: string, otp: string)  => {
-    const res = await axios.post(`http://192.168.192.189:8080/auth/register`, {
-        email,
-        otp,
-        password,
-    });
+export const API_SignUp = async (email: string, password: string, otp: string): Promise<SignUpResponse> => {
+    const res = await axios.post<SignUpResponse>(
+        "http://192.168.192.189:8080/auth/register",
+        { email, password, otp }
+    );
     return res.data;
 };

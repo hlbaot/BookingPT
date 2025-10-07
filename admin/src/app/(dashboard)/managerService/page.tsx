@@ -12,41 +12,9 @@ import {
   API_UpdateService
 } from '@/api/API_mngService';
 
-const fakedb = [
-  {
-    "id": 1,
-    "name": "Gói chụp cơ bản",
-    "price": 1000000,
-    "description": "Gói chụp cơ bản bao gồm 1 giờ chụp tại studio và 10 ảnh chỉnh sửa.",
-    "imageUrls": [
-      "https://example.com/image1.jpg",
-      "https://example.com/image2.jpg"
-    ]
-  },
-  {
-    "id": 2,
-    "name": "Gói chụp nâng cao",
-    "price": 2000000,
-    "description": "Gói chụp nâng cao bao gồm 2 giờ chụp tại studio, 20 ảnh chỉnh sửa và in 5 ảnh khổ lớn.",
-    "imageUrls": [
-      "https://example.com/image3.jpg",
-      "https://example.com/image4.jpg"
-    ]
-  },
-  {
-    "id": 3,
-    "name": "Gói chụp cao cấp",
-    "price": 3000000,
-    "description": "Gói chụp cao cấp bao gồm 3 giờ chụp tại studio và ngoài trời, 30 ảnh chỉnh sửa, in 10 ảnh khổ lớn và album ảnh.",
-    "imageUrls": [
-      "https://example.com/image5.jpg",
-      "https://example.com/image6.jpg"
-    ]
-  }
-]
 
 function ManagerService() {
-  const [data, setData] = useState<ServicePackage[]>(fakedb);
+  const [data, setData] = useState<ServicePackage[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editData, setEditData] = useState<ServicePackage>({
     id: 0,

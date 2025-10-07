@@ -40,7 +40,7 @@ const fakedb = [
 ]
 
 const ManagerFeedback: React.FC = () => {
-  const [data, setData] = useState<Feedback[]>(fakedb);
+  const [data, setData] = useState<Feedback[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

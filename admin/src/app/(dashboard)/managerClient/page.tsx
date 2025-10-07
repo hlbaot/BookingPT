@@ -71,7 +71,7 @@ const fakedb =
   ];
 
 const ManagerClient: React.FC = () => {
-  const [data, setData] = useState<Booking[]>(fakedb);
+  const [data, setData] = useState<Booking[]>([]);
   const [filteredData, setFilteredData] = useState<Booking[]>([]);
   const [packages, setPackages] = useState<ServicePackage[]>([]);
 

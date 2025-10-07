@@ -10,13 +10,15 @@ interface Props {
     switchToSignUp: () => void;
 }
 
+const SignInSchema = Yup.object({
+    email: Yup.string().email('Email không hợp lệ').required('Bắt buộc nhập'),
+    password: Yup.string().min(6, 'Tối thiểu 6 ký tự').required('Bắt buộc nhập'),
+})
+
 const FormSignIn: React.FC<Props> = ({ switchToSignUp }) => {
     const formik = useFormik<LoginRequest>({
         initialValues: { email: '', password: '' },
-        validationSchema: Yup.object({
-            email: Yup.string().email('Email không hợp lệ').required('Bắt buộc nhập'),
-            password: Yup.string().min(6, 'Tối thiểu 6 ký tự').required('Bắt buộc nhập'),
-        }),
+        validationSchema: SignInSchema,
         onSubmit: async (values, { setSubmitting, setErrors }) => {
             try {
                 const data = await API_SignIn(values);
